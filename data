@@ -1,14 +1,1 @@
-{
-  "daily": [
-    { "date": "2025-06-01", "ordersProcessed": 120 },
-    { "date": "2025-06-02", "ordersProcessed": 150 },
-    { "date": "2025-06-03", "ordersProcessed":  90 },
-    { "date": "2025-06-04", "ordersProcessed": 130 },
-    { "date": "2025-06-05", "ordersProcessed": 170 }
-  ],
-  "statusDistribution": {
-    "completed": 400,
-    "pending":   80,
-    "cancelled": 20
-  }
-}
+
