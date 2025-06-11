@@ -118,3 +118,49 @@ fetch('data/logistic-data.json')
     );
   })
   .catch(err => console.error('Error loading logistic data:', err));
+
+document.querySelectorAll('nav a[data-section]').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const id = link.getAttribute('data-section');
+    document.querySelectorAll('.tab-section').forEach(sec => {
+      sec.classList.toggle('active', sec.id === id);
+    });
+  });
+});
+
+document.getElementById('employeeForm').addEventListener('submit', e => {
+  e.preventDefault();
+  document.getElementById('formMessage').textContent = 'Працівника додано!';
+  e.target.reset();
+});
+
+fetch('data/logistic-data.json')
+  .then(res => res.json())
+  .then(({ daily, statusDistribution }) => {
+    const dates = daily.map(item => item.date);
+    const counts = daily.map(item => item.ordersProcessed);
+    new Chart(document.getElementById('ordersChart'), {
+      type: 'line',
+      data: {
+        labels: dates,
+        datasets: [{
+          label: 'Опрацьовано замовлень',
+          data: counts,
+          borderColor: '#007bff',
+          backgroundColor: 'rgba(0,123,255,0.1)',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: { responsive: true, scales: { y: { beginAtZero: true } } }
+    });
+
+    new Chart(document.getElementById('statusChart'), {
+      type: 'pie',
+      data: {
+        labels: Object.keys(statusDistribution),
+        datasets: [{
+          data: Object.values(statusDistribution),
+          backgroundColor: ['#28a745','#ffc107','#dc3545']
+       
