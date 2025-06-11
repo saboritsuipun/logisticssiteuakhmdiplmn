@@ -26,3 +26,45 @@ document.getElementById('contactForm').addEventListener('submit', function(e) {
   // Очищення форми
   e.target.reset();
 });
+
+function showSection(sectionId) {
+  document.querySelectorAll("main section").forEach(section => {
+    section.classList.remove("active");
+  });
+  document.getElementById(sectionId).classList.add("active");
+}
+
+document.getElementById("employeeForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const name = document.getElementById("name").value.trim();
+  const position = document.getElementById("position").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const message = document.getElementById("formMessage");
+
+  if (!name || !position || !email || !phone) {
+    message.style.color = "red";
+    message.textContent = "Будь ласка, заповніть усі поля.";
+    return;
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    message.style.color = "red";
+    message.textContent = "Невірний email.";
+    return;
+  }
+
+  const digitsOnly = phone.replace(/\D/g, "");
+  if (digitsOnly.length < 10) {
+    message.style.color = "red";
+    message.textContent = "Номер телефону має бути не менше 10 цифр.";
+    return;
+  }
+
+  message.style.color = "green";
+  message.textContent = "Працівника додано (імітація).";
+  this.reset();
+});
+
