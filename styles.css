@@ -9,7 +9,7 @@ header, footer {
   margin-bottom: 1rem;
 }
 
-/* Сховати всі секції окрім активної */
+/* Сховати всі секції, окрім активної */
 .tab-section {
   display: none;
 }
@@ -17,7 +17,7 @@ header, footer {
   display: block;
 }
 
-/* Активний пункт меню */
+/* Стилізація активного пункту меню */
 nav a.active {
   font-weight: bold;
   text-decoration: underline;
