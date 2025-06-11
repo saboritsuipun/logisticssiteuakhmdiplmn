@@ -22,3 +22,29 @@ nav a.active {
   text-decoration: underline;
   color: #ffc107; /* золото-подібний колір */
 }
+
+body {
+  font-family: "Times New Roman", serif;
+  background-color: #ffffff;
+  color: #333;
+  line-height: 1.6;
+}
+
+header, footer {
+  margin-bottom: 1rem;
+}
+
+/* Спочатку всі секції приховані, крім активної */
+.tab-section {
+  display: none;
+}
+.tab-section.active {
+  display: block;
+}
+
+/* Активне меню */
+nav a.active {
+  font-weight: bold;
+  text-decoration: underline;
+  color: #ffc107;
+}
