@@ -16,3 +16,9 @@ header, footer {
 .tab-section.active {
   display: block;
 }
+/* Виділення активної вкладки в меню */
+nav a.active {
+  font-weight: bold;
+  text-decoration: underline;
+  color: #ffc107; /* золото-подібний колір */
+}
