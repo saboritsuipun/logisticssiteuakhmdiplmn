@@ -25,3 +25,137 @@
   </main>
 </body>
 </html>
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Веборієнтована система управління логістичним відділом</title>
+  <!-- Підключення Bootstrap для зручності адаптивного дизайну -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" integrity="sha512-xxxxxxxx" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Ваш власний CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Навігаційне меню -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">Логістика</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent" aria-controls="navContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navContent">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#intro">Вступ</a></li>
+          <li class="nav-item"><a class="nav-link" href="#analysis">Аналіз</a></li>
+          <li class="nav-item"><a class="nav-link" href="#requirements">Технічне завдання</a></li>
+          <li class="nav-item"><a class="nav-link" href="#architecture">Архітектура</a></li>
+          <li class="nav-item"><a class="nav-link" href="#implementation">Реалізація</a></li>
+          <li class="nav-item"><a class="nav-link" href="#conclusion">Висновки</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">Контакти</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Секція "Вступ" -->
+  <section id="intro" class="section py-5">
+    <div class="container">
+      <h1 class="display-5 mb-3">Веборієнтована система ведення процесів управління логістичним відділом</h1>
+      <p>Ця система спрямована на оптимізацію робочих потоків, моніторинг даних та прийняття рішень із використанням сучасних веб-технологій.</p>
+    </div>
+  </section>
+
+  <!-- Секція "Аналіз предметної області" -->
+  <section id="analysis" class="section bg-light py-5">
+    <div class="container">
+      <h2>Аналіз предметної області</h2>
+      <p>У розділі проводиться аналіз діяльності логістичного відділу, визначаються проблемні зони та потреба у впровадженні інтегрованої системи управління процесами.</p>
+      <!-- Можна додати діаграму у вигляді зображення чи SVG -->
+      <img src="diagram-example.svg" alt="Діаграма процесів" class="img-fluid my-3">
+    </div>
+  </section>
+
+  <!-- Секція "Технічне завдання" -->
+  <section id="requirements" class="section py-5">
+    <div class="container">
+      <h2>Технічне завдання</h2>
+      <ul>
+        <li>Розробка інтегрованої платформи для збору, обробки та аналізу даних логістичного відділу.</li>
+        <li>Імплементація REST API для зв’язку між фронтендом та серверною частиною.</li>
+        <li>UI/UX дизайн, оптимізований для зручної роботи на різних пристроях.</li>
+        <li>Інтерактивні діаграми та звітність для моніторингу процесів у реальному часі.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Секція "Архітектура системи" -->
+  <section id="architecture" class="section bg-light py-5">
+    <div class="container">
+      <h2>Архітектура системи</h2>
+      <p>Загальна архітектура побудована на багаторівневій структурі:</p>
+      <ol>
+        <li><strong>Клієнтський рівень:</strong> Веб-інтерфейс із адаптивним дизайном.</li>
+        <li><strong>Серверний рівень:</strong> REST API, обробка запитів, бізнес-логіка.</li>
+        <li><strong>Рівень даних:</strong> База даних MySQL для зберігання інформації.</li>
+      </ol>
+      <p>Нижче наведено спрощену блок-схему взаємодії компонентів:</p>
+      <img src="architecture-scheme.svg" alt="Блок-схема архітектури" class="img-fluid my-3">
+    </div>
+  </section>
+
+  <!-- Секція "Реалізація проекту" -->
+  <section id="implementation" class="section py-5">
+    <div class="container">
+      <h2>Реалізація проекту</h2>
+      <p>На даному етапі здійснено побудову графічного інтерфейсу, реалізовано функціонал обробки вхідних даних та формування звітів.</p>
+      <!-- Приклад коду інтерфейсу -->
+      <pre class="code-block">
+&lt;form id="dataForm"&gt;
+  &lt;div class="mb-3"&gt;
+    &lt;label for="inputData" class="form-label"&gt;Введіть дані:&lt;/label&gt;
+    &lt;input type="text" class="form-control" id="inputData" placeholder="Наприклад, номер замовлення"&gt;
+  &lt;/div&gt;
+  &lt;button type="submit" class="btn btn-primary"&gt;Відправити&lt;/button&gt;
+&lt;/form&gt;
+      </pre>
+    </div>
+  </section>
+
+  <!-- Секція "Висновки" -->
+  <section id="conclusion" class="section bg-light py-5">
+    <div class="container">
+      <h2>Висновки</h2>
+      <p>Розроблена система демонструє ефективну автоматизацію управлінських процесів, що дозволяє оптимізувати роботу логістичного відділу та досягти високої точності у моніторингу даних.</p>
+    </div>
+  </section>
+
+  <!-- Секція "Контакти" -->
+  <section id="contact" class="section py-5">
+    <div class="container">
+      <h2>Контакти</h2>
+      <p>Якщо у вас виникли запитання чи пропозиції, зв'яжіться з нами:</p>
+      <form id="contactForm">
+        <div class="mb-3">
+          <label for="name" class="form-label">Ваше ім'я</label>
+          <input type="text" class="form-control" id="name" placeholder="Іван">
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" class="form-control" id="email" placeholder="ivan@example.com">
+        </div>
+        <div class="mb-3">
+          <label for="message" class="form-label">Повідомлення</label>
+          <textarea class="form-control" id="message" rows="3" placeholder="Ваше повідомлення"></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Надіслати</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Підключення Bootstrap та власного JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js" integrity="sha512-yyyyyyyy" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="script.js"></script>
+</body>
+</html>
