@@ -102,3 +102,5 @@ fetch('data/logistic-data.json')
     });
   })
   .catch(console.error);
+
+fetch("data/orders.json")
