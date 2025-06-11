@@ -21,3 +21,39 @@ nav a {
   text-decoration: none;
   font-weight: bold;
 }
+
+/* Загальні стилі */
+body {
+  font-family: "Times New Roman", serif;
+  background-color: #ffffff;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Секції */
+.section {
+  padding: 60px 0;
+}
+
+/* Заголовки */
+h1, h2 {
+  margin-bottom: 20px;
+}
+
+/* Стилізація блока коду */
+.code-block {
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  padding: 15px;
+  font-family: Consolas, monospace;
+  font-size: 0.9rem;
+  overflow-x: auto;
+}
+
+/* Футер, якщо потрібно */
+footer {
+  background-color: #333;
+  color: #fff;
+  padding: 20px 0;
+  text-align: center;
+}
