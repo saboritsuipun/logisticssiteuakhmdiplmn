@@ -1,29 +1,31 @@
-
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Система логістики</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>Система управління логістикою</h1>
-    <nav>
-      <ul>
-        <li><a href="#" onclick="showSection('home')">Головна</a></li>
-        <li><a href="#" onclick="showSection('orders')">Замовлення</a></li>
-        <li><a href="#" onclick="showSection('transport')">Транспорт</a></li>
-        <li><a href="#" onclick="showSection('employees')">Працівники</a></li>
-        <li><a href="#" onclick="showSection('reports')">Звіти</a></li>
-        <li><a href="#" onclick="showSection('contact')">Контакти</a></li>
-      </ul>
-    </nav>
+  <header class="bg-dark text-white p-3">
+    <div class="container d-flex justify-content-between align-items-center">
+      <h1 class="h4 m-0">Система управління логістикою</h1>
+      <nav>
+        <ul class="nav">
+          <li class="nav-item"><a class="nav-link text-white" href="#" data-section="home">Головна</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="#" data-section="orders">Замовлення</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="#" data-section="transport">Транспорт</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="#" data-section="employees">Працівники</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="#" data-section="reports">Звіти</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="#" data-section="contact">Контакти</a></li>
+        </ul>
+      </nav>
+    </div>
   </header>
 
-  <main>
-    <section id="home" class="active">
+  <main class="container my-4">
+    <section id="home" class="tab-section active">
       <h2>Головна</h2>
       <p>Ласкаво просимо до системи управління логістикою. Використовуйте меню вище для переходу між розділами.</p>
       <h3>Можливості системи:</h3>
@@ -36,19 +38,19 @@
       </ul>
     </section>
 
-    <section id="orders">
+    <section id="orders" class="tab-section">
       <h2>Замовлення</h2>
       <p>Форма для перегляду та створення нових замовлень (імітація).</p>
     </section>
 
-    <section id="transport">
+    <section id="transport" class="tab-section">
       <h2>Транспорт</h2>
       <p>Інформація про транспортні засоби та водіїв.</p>
     </section>
 
-    <section id="employees">
+    <section id="employees" class="tab-section">
       <h2>Працівники</h2>
-      <table>
+      <table class="table table-striped">
         <thead>
           <tr>
             <th>ID</th><th>ПІБ</th><th>Посада</th><th>Телефон</th><th>Статус</th>
@@ -56,53 +58,74 @@
         </thead>
         <tbody>
           <tr>
-            <td>001</td><td>Іваненко І.І.</td><td>Водій</td><td>+380631112233</td><td>Активний</td>
+            <td>001</td>
+            <td>Іваненко І.І.</td>
+            <td>Водій</td>
+            <td>+380631112233</td>
+            <td>Активний</td>
           </tr>
         </tbody>
       </table>
 
       <h3>Додати працівника</h3>
-      <p id="formMessage"></p>
-      <form id="employeeForm">
-        <label>ПІБ: <input type="text" id="name" required></label>
-        <label>Посада: <input type="text" id="position" required></label>
-        <label>Email: <input type="email" id="email" required></label>
-        <label>Телефон: <input type="tel" id="phone" required></label>
-        <button type="submit">Додати</button>
+      <p id="formMessage" class="text-success"></p>
+      <form id="employeeForm" class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">ПІБ</label>
+          <input type="text" id="name" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Посада</label>
+          <input type="text" id="position" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Email</label>
+          <input type="email" id="email" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Телефон</label>
+          <input type="tel" id="phone" class="form-control" required>
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">Додати</button>
+        </div>
       </form>
     </section>
 
-    <section id="reports">
+    <section id="reports" class="tab-section">
       <h2>Звіти</h2>
-      <p>Звіти за періодами. (Тут можна згодом підключити генерацію PDF).</p>
+      <p>Звіти за періодами. (Тут можна підключити генерацію PDF).</p>
     </section>
 
-    <section id="contact">
+    <section id="dashboard" class="tab-section">
+      <h2>Інтерактивна панель KPI</h2>
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <canvas id="ordersChart"></canvas>
+        </div>
+        <div class="col-md-6 mb-4">
+          <canvas id="statusChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="tab-section">
       <h2>Контакти</h2>
-      <p>Email: support@logistikasystem.ua<br>Телефон: +380501234567</p>
+      <p>
+        Email: <a href="mailto:support@logistikasystem.ua">support@logistikasystem.ua</a><br>
+        Телефон: +380501234567
+      </p>
     </section>
   </main>
 
-  <footer>
-    <p>&copy; 2025 ЛогістикаSoft</p>
+  <footer class="bg-light text-center py-3">
+    <p class="mb-0">&copy; 2025 ЛогістикаSoft</p>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
-<!-- **** Dashboard **** -->
-<section id="dashboard" class="section bg-light py-5">
-  <div class="container">
-    <h2>Інтерактивна панель KPI</h2>
-    <div class="row">
-      <div class="col-md-6">
-        <canvas id="ordersChart"></canvas>
-      </div>
-      <div class="col-md-6">
-        <canvas id="statusChart"></canvas>
-      </div>
-    </div>
-  </div>
-</section>
 
 
