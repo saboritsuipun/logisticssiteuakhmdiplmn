@@ -68,3 +68,53 @@ document.getElementById("employeeForm").addEventListener("submit", function (e) 
   this.reset();
 });
 
+// Після існуючої обробки contactForm
+// Завантажуємо дані і рендеримо графіки
+fetch('data/logistic-data.json')
+  .then(res => res.json())
+  .then(({ daily, statusDistribution }) => {
+    // 1) Лінійний графік: замовлень за датами
+    const dates  = daily.map(item => item.date);
+    const counts = daily.map(item => item.ordersProcessed);
+
+    new Chart(
+      document.getElementById('ordersChart'),
+      {
+        type: 'line',
+        data: {
+          labels: dates,
+          datasets: [{
+            label: 'Опрацьовано замовлень',
+            data: counts,
+            borderColor: '#007bff',
+            backgroundColor: 'rgba(0,123,255,0.1)',
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      }
+    );
+
+    // 2) Кругова діаграма: статуси замовлень
+    new Chart(
+      document.getElementById('statusChart'),
+      {
+        type: 'pie',
+        data: {
+          labels: Object.keys(statusDistribution),
+          datasets: [{
+            data: Object.values(statusDistribution),
+            backgroundColor: ['#28a745','#ffc107','#dc3545']
+          }]
+        },
+        options: { responsive: true }
+      }
+    );
+  })
+  .catch(err => console.error('Error loading logistic data:', err));
