@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <meta charset="UTF-8">
   <title>Система логістики</title>
   <link rel="stylesheet" href="style.css">
@@ -89,3 +90,19 @@
   <script src="script.js"></script>
 </body>
 </html>
+<!-- **** Dashboard **** -->
+<section id="dashboard" class="section bg-light py-5">
+  <div class="container">
+    <h2>Інтерактивна панель KPI</h2>
+    <div class="row">
+      <div class="col-md-6">
+        <canvas id="ordersChart"></canvas>
+      </div>
+      <div class="col-md-6">
+        <canvas id="statusChart"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+
