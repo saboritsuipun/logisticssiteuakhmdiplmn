@@ -9,6 +9,7 @@ header, footer {
   margin-bottom: 1rem;
 }
 
+/* Сховати усі секції, окрім активної */
 .tab-section {
   display: none;
 }
@@ -16,35 +17,11 @@ header, footer {
 .tab-section.active {
   display: block;
 }
-/* Виділення активної вкладки в меню */
-nav a.active {
-  font-weight: bold;
-  text-decoration: underline;
-  color: #ffc107; /* золото-подібний колір */
-}
 
-body {
-  font-family: "Times New Roman", serif;
-  background-color: #ffffff;
-  color: #333;
-  line-height: 1.6;
-}
-
-header, footer {
-  margin-bottom: 1rem;
-}
-
-/* Спочатку всі секції приховані, крім активної */
-.tab-section {
-  display: none;
-}
-.tab-section.active {
-  display: block;
-}
-
-/* Активне меню */
+/* Активний елемент навігації */
 nav a.active {
   font-weight: bold;
   text-decoration: underline;
   color: #ffc107;
+}
 }
