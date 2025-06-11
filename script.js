@@ -239,3 +239,20 @@ document.getElementById('loadOrders').addEventListener('click', () => {
     .catch(err => console.error('Error loading orders:', err));
 });
        
+document.querySelectorAll('nav a[data-section]').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+
+    // Видаляємо клас active зі всіх посилань
+    document.querySelectorAll('nav a[data-section]').forEach(nav => nav.classList.remove('active'));
+
+    // Додаємо клас active до натиснутого посилання
+    link.classList.add('active');
+
+    // Перемикаємо видимість секцій
+    const id = link.getAttribute('data-section');
+    document.querySelectorAll('.tab-section').forEach(sec => {
+      sec.classList.toggle('active', sec.id === id);
+    });
+  });
+});
