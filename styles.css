@@ -9,19 +9,17 @@ header, footer {
   margin-bottom: 1rem;
 }
 
-/* Сховати усі секції, окрім активної */
+/* Сховати всі секції окрім активної */
 .tab-section {
   display: none;
 }
-
 .tab-section.active {
   display: block;
 }
 
-/* Активний елемент навігації */
+/* Активний пункт меню */
 nav a.active {
   font-weight: bold;
   text-decoration: underline;
   color: #ffc107;
-}
 }
