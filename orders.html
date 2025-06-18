@@ -1,4 +1,25 @@
 <!DOCTYPE html><html><head><title>Замовлення</title><link rel='stylesheet' href='styles.css'></head><body><h1>Сторінка замовлень</h1></body></html>
+<form onsubmit="handleOrderForm(event)">
+  <input name="clientName" placeholder="Ім’я клієнта">
+  <input name="product" placeholder="Продукт">
+  <input name="quantity" type="number" placeholder="Кількість">
+  <input name="address" placeholder="Адреса">
+  <button type="submit">Надіслати</button>
+</form>
+
+<script>
+function handleOrderForm(event) {
+  event.preventDefault();
+  const form = event.target;
+  const orderData = {
+    clientName: form.clientName.value.trim(),
+    product: form.product.value.trim(),
+    quantity: parseInt(form.quantity.value),
+    address: form.address.value.trim()
+  };
+  addOrder(orderData);
+}
+</script>
 
 row.innerHTML = `
   <td>${order.id}</td>
