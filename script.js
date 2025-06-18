@@ -153,3 +153,20 @@ document.getElementById('orderForm').addEventListener('submit', e => {
   e.target.reset();
 });
 
+// Завантаження замовлень з localStorage при старті сторінки
+window.addEventListener('DOMContentLoaded', () => {
+  const orders = JSON.parse(localStorage.getItem('orders')) || [];
+  const tbody = document.querySelector('#ordersTable tbody');
+  tbody.innerHTML = ''; // очищаємо, щоб не дублювати
+
+  orders.forEach(order => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${order.id}</td>
+      <td>${order.date}</td>
+      <td>${order.amount}</td>
+      <td>${order.status}</td>
+    `;
+    tbody.appendChild(row);
+  });
+});
