@@ -185,3 +185,22 @@ row.querySelector('.edit-btn').addEventListener('click', () => {
   // Видаляємо рядок з таблиці
   row.remove();
 });
+
+function addOrder(orderData) {
+  // Перевірка, чи всі обов’язкові поля заповнені
+  if (!orderData.clientName || !orderData.product || !orderData.quantity || !orderData.address) {
+    alert('Будь ласка, заповніть усі поля замовлення.');
+    return;
+  }
+
+  let orders = JSON.parse(localStorage.getItem('orders')) || [];
+
+  orders.push({
+    id: Date.now(),
+    ...orderData
+  });
+
+  localStorage.setItem('orders', JSON.stringify(orders));
+
+  alert('Замовлення додано успішно!');
+}
