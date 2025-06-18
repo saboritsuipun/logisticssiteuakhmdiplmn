@@ -182,6 +182,8 @@ document.getElementById('orderForm').addEventListener('submit', e => {
   e.target.reset();
 });
 
+window.addEventListener('DOMContentLoaded', renderOrders);
+
 // Завантаження замовлень з localStorage при старті сторінки
 window.addEventListener('DOMContentLoaded', () => {
   const orders = JSON.parse(localStorage.getItem('orders')) || [];
@@ -232,4 +234,30 @@ function addOrder(orderData) {
   localStorage.setItem('orders', JSON.stringify(orders));
 
   alert('Замовлення додано успішно!');
+}
+function renderOrders() {
+  const orders = JSON.parse(localStorage.getItem('orders')) || [];
+  const tbody = document.querySelector('#ordersTable tbody');
+  tbody.innerHTML = '';
+
+  orders.forEach(order => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${order.id}</td>
+      <td>${order.date}</td>
+      <td>${order.amount}</td>
+      <td>${order.status}</td>
+      <td><button class="edit-btn">Редагувати</button></td>
+    `;
+    tbody.appendChild(row);
+
+    row.querySelector('.edit-btn').addEventListener('click', () => {
+      document.getElementById('orderId').value = order.id;
+      document.getElementById('orderDate').value = order.date;
+      document.getElementById('orderAmount').value = order.amount;
+      document.getElementById('orderStatus').value = order.status;
+      editingOrderId = order.id;
+      document.getElementById('orderMessage').textContent = 'Редагування замовлення...';
+    });
+  });
 }
