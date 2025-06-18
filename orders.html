@@ -28,3 +28,247 @@ row.innerHTML = `
   <td>${order.status}</td>
   <td><button class="edit-btn">Редагувати</button></td>
 `;
+
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Замовлення</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff7e6;
+      color: #333;
+      margin: 20px;
+    }
+    nav {
+      margin-bottom: 20px;
+    }
+    nav a {
+      text-decoration: none;
+      color: #a36b00;
+      padding: 10px 15px;
+      border-radius: 5px;
+      background: #fbe8a6;
+      margin-right: 10px;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+    nav a.active, nav a:hover {
+      background: #ffd966;
+      color: #5a3e00;
+    }
+    .tab-section {
+      display: none;
+      background: #fff3cc;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(255, 211, 91, 0.7);
+    }
+    .tab-section.active {
+      display: block;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    table, th, td {
+      border: 1px solid #d2b84c;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+    }
+    button {
+      background: #f7c948;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #4b3200;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #e2b02d;
+    }
+    form input, form select {
+      padding: 6px;
+      margin-bottom: 10px;
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #d2b84c;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    #orderMessage {
+      margin-top: 10px;
+      font-weight: 600;
+      color: #4b3200;
+      min-height: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="active" data-section="ordersSection">Замовлення</a>
+  <a href="#" data-section="otherSection">Інше</a>
+</nav>
+
+<section id="ordersSection" class="tab-section active">
+  <h2>Список замовлень</h2>
+  <table id="ordersTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Дата</th>
+        <th>Сума</th>
+        <th>Статус</th>
+        <th>Дії</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Тут будуть рядки з замовленнями -->
+    </tbody>
+  </table>
+
+  <h3 id="formTitle">Додати замовлення</h3>
+  <form id="orderForm">
+    <input type="text" id="orderId" placeholder="ID замовлення" required />
+    <input type="date" id="orderDate" required />
+    <input type="number" id="orderAmount" placeholder="Сума" min="0" step="0.01" required />
+    <select id="orderStatus" required>
+      <option value="">Виберіть статус</option>
+      <option value="Новий">Новий</option>
+      <option value="В обробці">В обробці</option>
+      <option value="Відправлено">Відправлено</option>
+      <option value="Скасовано">Скасовано</option>
+    </select>
+    <button type="submit">Зберегти</button>
+  </form>
+  <div id="orderMessage"></div>
+</section>
+
+<section id="otherSection" class="tab-section">
+  <h2>Інша інформація</h2>
+  <p>Тут можна розмістити будь-який інший контент.</p>
+</section>
+
+<script>
+  // Глобальна змінна для ID замовлення, що редагується
+  let editingOrderId = null;
+
+  function renderOrders() {
+    const orders = JSON.parse(localStorage.getItem('orders')) || [];
+    const tbody = document.querySelector('#ordersTable tbody');
+    tbody.innerHTML = '';
+
+    orders.forEach(order => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${order.id}</td>
+        <td>${order.date}</td>
+        <td>${order.amount}</td>
+        <td>${order.status}</td>
+        <td>
+          <button class="edit-btn">Редагувати</button>
+          <button class="delete-btn">Видалити</button>
+        </td>
+      `;
+      tbody.appendChild(row);
+
+      row.querySelector('.edit-btn').addEventListener('click', () => {
+        document.getElementById('orderId').value = order.id;
+        document.getElementById('orderDate').value = order.date;
+        document.getElementById('orderAmount').value = order.amount;
+        document.getElementById('orderStatus').value = order.status;
+        editingOrderId = order.id;
+        document.getElementById('formTitle').textContent = 'Редагувати замовлення';
+        document.getElementById('orderMessage').textContent = '';
+      });
+
+      row.querySelector('.delete-btn').addEventListener('click', () => {
+        if (confirm('Ви дійсно хочете видалити це замовлення?')) {
+          let orders = JSON.parse(localStorage.getItem('orders')) || [];
+          orders = orders.filter(o => o.id !== order.id);
+          localStorage.setItem('orders', JSON.stringify(orders));
+          renderOrders();
+          document.getElementById('orderMessage').textContent = 'Замовлення видалено!';
+          if (editingOrderId === order.id) {
+            editingOrderId = null;
+            document.getElementById('orderForm').reset();
+            document.getElementById('formTitle').textContent = 'Додати замовлення';
+          }
+        }
+      });
+    });
+  }
+
+  document.getElementById('orderForm').addEventListener('submit', e => {
+    e.preventDefault();
+
+    const id = document.getElementById('orderId').value.trim();
+    const date = document.getElementById('orderDate').value;
+    const amount = document.getElementById('orderAmount').value.trim();
+    const status = document.getElementById('orderStatus').value;
+
+    if (!id || !date || !amount || !status) {
+      alert('Будь ласка, заповніть усі поля.');
+      return;
+    }
+
+    let orders = JSON.parse(localStorage.getItem('orders')) || [];
+
+    if (editingOrderId) {
+      // Оновлюємо замовлення
+      orders = orders.map(order => order.id === editingOrderId ? { id, date, amount, status } : order);
+      document.getElementById('orderMessage').textContent = 'Замовлення оновлено!';
+      editingOrderId = null;
+      document.getElementById('formTitle').textContent = 'Додати замовлення';
+    } else {
+      // Перевірка унікальності ID
+      if (orders.some(order => order.id === id)) {
+        alert('Замовлення з таким ID вже існує!');
+        return;
+      }
+      orders.push({ id, date, amount, status });
+      document.getElementById('orderMessage').textContent = 'Замовлення додано!';
+    }
+
+    localStorage.setItem('orders', JSON.stringify(orders));
+    renderOrders();
+    e.target.reset();
+  });
+
+  // Навігація по вкладках
+  document.querySelectorAll('nav a[data-section]').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+
+      document.querySelectorAll('nav a[data-section]').forEach(nav => nav.classList.remove('active'));
+      document.querySelectorAll('.tab-section').forEach(sec => sec.classList.remove('active'));
+
+      link.classList.add('active');
+      const id = link.getAttribute('data-section');
+      document.getElementById(id).classList.add('active');
+
+      // Якщо переходиш на форму, очищаємо редагування
+      if (id === 'ordersSection') {
+        editingOrderId = null;
+        document.getElementById('orderForm').reset();
+        document.getElementById('formTitle').textContent = 'Додати замовлення';
+        document.getElementById('orderMessage').textContent = '';
+      }
+    });
+  });
+
+  // Початкове завантаження
+  window.addEventListener('DOMContentLoaded', () => {
+    renderOrders();
+  });
+</script>
+
+</body>
+</html>
