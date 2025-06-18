@@ -170,3 +170,18 @@ window.addEventListener('DOMContentLoaded', () => {
     tbody.appendChild(row);
   });
 });
+row.querySelector('.edit-btn').addEventListener('click', () => {
+  // Заповнюємо форму значеннями з обраного замовлення
+  document.getElementById('orderId').value = order.id;
+  document.getElementById('orderDate').value = order.date;
+  document.getElementById('orderAmount').value = order.amount;
+  document.getElementById('orderStatus').value = order.status;
+
+  // Видаляємо старе замовлення (воно буде перезаписане)
+  const orders = JSON.parse(localStorage.getItem('orders')) || [];
+  const updatedOrders = orders.filter(o => o.id !== order.id);
+  localStorage.setItem('orders', JSON.stringify(updatedOrders));
+
+  // Видаляємо рядок з таблиці
+  row.remove();
+});
