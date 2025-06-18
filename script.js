@@ -115,6 +115,35 @@ function addOrder(orderData) {
 
   let orders = JSON.parse(localStorage.getItem('orders')) || [];
 
+  let editingOrderId = null; // null — режим додавання, не редагування
+document.getElementById('orderForm').addEventListener('submit', e => {
+  e.preventDefault();
+
+  const orderData = {
+    id: document.getElementById('orderId').value.trim(),
+    date: document.getElementById('orderDate').value.trim(),
+    amount: document.getElementById('orderAmount').value.trim(),
+    status: document.getElementById('orderStatus').value.trim()
+  };
+
+  let orders = JSON.parse(localStorage.getItem('orders')) || [];
+
+  if (editingOrderId) {
+    // РЕДАГУВАННЯ
+    orders = orders.map(order => order.id === editingOrderId ? orderData : order);
+    document.getElementById('orderMessage').textContent = 'Замовлення оновлено!';
+    editingOrderId = null;
+  } else {
+    // ДОДАВАННЯ
+    orders.push(orderData);
+    document.getElementById('orderMessage').textContent = 'Замовлення додано!';
+  }
+
+  localStorage.setItem('orders', JSON.stringify(orders));
+  renderOrders();
+  e.target.reset();
+});
+
   orders.push({
     id: orderData.id,
     date: orderData.date,
