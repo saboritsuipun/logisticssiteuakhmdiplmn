@@ -104,3 +104,24 @@ fetch('data/logistic-data.json')
   .catch(console.error);
 
 fetch("data/orders.json")
+
+// Обробка форми додавання нового замовлення з валідацією
+function addOrder(orderData) {
+  // Перевірка, чи всі обов’язкові поля заповнені
+  if (!orderData.id || !orderData.date || !orderData.amount || !orderData.status) {
+    alert('Будь ласка, заповніть усі поля замовлення.');
+    return;
+  }
+
+  let orders = JSON.parse(localStorage.getItem('orders')) || [];
+
+  orders.push({
+    id: orderData.id,
+    date: orderData.date,
+    amount: orderData.amount,
+    status: orderData.status
+  });
+
+  localStorage.setItem('orders', JSON.stringify(orders));
+  alert('Замовлення додано успішно!');
+}
