@@ -125,3 +125,31 @@ function addOrder(orderData) {
   localStorage.setItem('orders', JSON.stringify(orders));
   alert('Замовлення додано успішно!');
 }
+
+document.getElementById('orderForm').addEventListener('submit', e => {
+  e.preventDefault();
+
+  const orderData = {
+    id: document.getElementById('orderId').value.trim(),
+    date: document.getElementById('orderDate').value.trim(),
+    amount: document.getElementById('orderAmount').value.trim(),
+    status: document.getElementById('orderStatus').value.trim()
+  };
+
+  addOrder(orderData); // збереження в localStorage
+
+  // відображення в таблиці
+  const tbody = document.querySelector('#ordersTable tbody');
+  const row = document.createElement('tr');
+  row.innerHTML = `
+    <td>${orderData.id}</td>
+    <td>${orderData.date}</td>
+    <td>${orderData.amount}</td>
+    <td>${orderData.status}</td>
+  `;
+  tbody.appendChild(row);
+
+  document.getElementById('orderMessage').textContent = 'Замовлення додано!';
+  e.target.reset();
+});
+
