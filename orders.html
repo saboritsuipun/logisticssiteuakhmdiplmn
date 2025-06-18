@@ -1,1 +1,9 @@
 <!DOCTYPE html><html><head><title>Замовлення</title><link rel='stylesheet' href='styles.css'></head><body><h1>Сторінка замовлень</h1></body></html>
+
+row.innerHTML = `
+  <td>${order.id}</td>
+  <td>${order.date}</td>
+  <td>${order.amount}</td>
+  <td>${order.status}</td>
+  <td><button class="edit-btn">Редагувати</button></td>
+`;
