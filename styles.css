@@ -1,40 +1,25 @@
 body {
-  font-family: "Times New Roman", serif;
-  background-color: #ffffff;
-  color: #333;
-  line-height: 1.6;
   background-color: #000000; /* Чорний фон для сторінки */
   color: #FFD700;           /* Жовтий текст */
   font-family: 'Arial', sans-serif;
 }
 
-header, footer {
-  margin-bottom: 1rem;
 /* Заголовки */
 h1, h2, h3, h4, h5, h6 {
   color: #FFD700;
 }
 
-/* Сховати всі секції, окрім активної */
-.tab-section {
-  display: none;
 /* Посилання */
 a {
   color: #FFD700;
   text-decoration: none;
   transition: color 0.3s;
 }
-.tab-section.active {
-  display: block;
+
 a:hover {
   color: #ffdf00; /* Можна трохи змінити відтінок при наведенні */
 }
 
-/* Стилізація активного пункту меню */
-nav a.active {
-  font-weight: bold;
-  text-decoration: underline;
-  color: #ffc107;
 /* Навігаційне меню */
 nav ul {
   list-style: none;
@@ -78,104 +63,7 @@ nav ul li a.active, nav ul li a:hover {
 /* Форми */
 input, select, textarea {
   background-color: #222222;
-  border: 1px solid #FFD700;
-  color: #FFD700;
-}
-input::placeholder, textarea::placeholder {
-  color: #aaa;
-}
-
-/* Header */
-header {
-  background-color: #111111;
-}
-
-/* Footer */
-footer {
-  background-color: #111111;
-  color: #FFD700;
-}
-  body {Add commentMore actions
-  font-family: "Times New Roman", serif;
-  background-color: #ffffff;
-  color: #333;
-  line-height: 1.6;
-  background-color: #000000; /* Чорний фон для сторінки */
-  color: #FFD700;           /* Жовтий текст */
-  font-family: 'Arial', sans-serif;
-}
-
-header, footer {
-  margin-bottom: 1rem;
-/* Заголовки */
-h1, h2, h3, h4, h5, h6 {
-  color: #FFD700;
-}
-
-/* Сховати всі секції, окрім активної */
-.tab-section {
-  display: none;
-/* Посилання */
-a {
-  color: #FFD700;
-  text-decoration: none;
-  transition: color 0.3s;
-}
-.tab-section.active {
-  display: block;
-a:hover {
-  color: #ffdf00; /* Можна трохи змінити відтінок при наведенні */
-}
-
-/* Стилізація активного пункту меню */
-nav a.active {
-  font-weight: bold;
-  text-decoration: underline;
-  color: #ffc107;
-/* Навігаційне меню */
-nav ul {
-  list-style: none;
-  display: flex;
-  padding-left: 0;
-}
-nav ul li {
-  margin-right: 20px;
-}
-nav ul li a {
-  padding: 8px 12px;
-  background-color: #222222;
-  border-radius: 4px;
-}
-nav ul li a.active, nav ul li a:hover {
-  background-color: #FFD700;
-  color: #000;
-}
-
-/* Кнопки */
-.btn-primary {
-  background-color: #FFD700;
-  border: none;
-  color: #000;
-  transition: background-color 0.3s;
-}
-.btn-primary:hover {
-  background-color: #ffdf00;
-}
-.btn-secondary {
-  background-color: #333333;
-  color: #FFD700;
-  border: 1px solid #FFD700;
-  transition: background-color 0.3s, color 0.3s;
-}
-.btn-secondary:hover {
-  background-color: #FFD700;
-  color: #000;
-}
-
-/* Форми */Add commentMore actions
-input, select, textarea {
-  background-color: #222222;
-  border: 1px solid #FFD700;
+  border: 1px solid #FFD700;Add commentMore actions
   color: #FFD700;
 }
 input::placeholder, textarea::placeholder {
