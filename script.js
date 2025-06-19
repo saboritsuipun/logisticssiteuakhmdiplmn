@@ -1,5 +1,3 @@
-
-
 window.addEventListener('DOMContentLoaded', () => {
 
   let editingOrderId = null;
@@ -17,7 +15,6 @@ window.addEventListener('DOMContentLoaded', () => {
     excelBtn: document.getElementById('download-excel-btn'),
     genReportBtn: document.getElementById('generate-report-btn')
   };
-
 
   function getStorage(key) {
     return JSON.parse(localStorage.getItem(key)) || [];
@@ -148,8 +145,6 @@ window.addEventListener('DOMContentLoaded', () => {
     [el.csvBtn, el.pdfBtn, el.excelBtn].forEach(btn => btn.classList.remove('d-none'));
   }
 
-  // === ПОДІЇ ===
-
   el.orderForm?.addEventListener('submit', e => {
     e.preventDefault();
     const order = {
@@ -247,7 +242,6 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // === ІНІЦІАЛІЗАЦІЯ ===
   renderOrders();
   renderTransport();
 });
