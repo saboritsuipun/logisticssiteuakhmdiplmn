@@ -59,7 +59,7 @@ nav ul li a.active, nav ul li a:hover {
   background-color: #FFD700;
   border: none;
   color: #000;
-  transition: background-color 0.3s;Add commentMore actions
+  transition: background-color 0.3s;
 }
 .btn-primary:hover {
   background-color: #ffdf00;
