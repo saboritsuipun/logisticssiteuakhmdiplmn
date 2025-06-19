@@ -1,82 +1,45 @@
-/* Глобальні стилі */
 body {
-  background-color: #000000; /* Чорний фон для сторінки */
-  color: #FFD700;           /* Жовтий текст */
-  font-family: 'Arial', sans-serif;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f8f9fa;
+  color: #333;
 }
 
-/* Заголовки */
-h1, h2, h3, h4, h5, h6 {
-  color: #FFD700;
+h2 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  color: #2c3e50;
 }
 
-/* Посилання */
-a {
-  color: #FFD700;
-  text-decoration: none;
-  transition: color 0.3s;
-}
-a:hover {
-  color: #ffdf00; /* Можна трохи змінити відтінок при наведенні */
+table {
+  background-color: #fff;
 }
 
-/* Навігаційне меню */
-nav ul {
-  list-style: none;
-  display: flex;
-  padding-left: 0;
-}
-nav ul li {
-  margin-right: 20px;
-}
-nav ul li a {
-  padding: 8px 12px;
-  background-color: #222222;
-  border-radius: 4px;
-}
-nav ul li a.active, nav ul li a:hover {
-  background-color: #FFD700;
-  color: #000;
+th {
+  background-color: #343a40;
+  color: #fff;
+  text-align: center;
 }
 
-/* Кнопки */
-.btn-primary {
-  background-color: #FFD700;
-  border: none;
-  color: #000;
-  transition: background-color 0.3s;
-}
-.btn-primary:hover {
-  background-color: #ffdf00;
-}
-.btn-secondary {
-  background-color: #333333;
-  color: #FFD700;
-  border: 1px solid #FFD700;
-  transition: background-color 0.3s, color 0.3s;
-}
-.btn-secondary:hover {
-  background-color: #FFD700;
-  color: #000;
+td, th {
+  vertical-align: middle;
 }
 
-/* Форми */
-input, select, textarea {
-  background-color: #222222;
-  border: 1px solid #FFD700;
-  color: #FFD700;
-}
-input::placeholder, textarea::placeholder {
-  color: #aaa;
+.btn {
+  min-width: 100px;
 }
 
-/* Header */
-header {
-  background-color: #111111;
+form .form-label {
+  font-weight: bold;
 }
 
-/* Footer */
+#orderMessage, #transportMessage {
+  font-weight: bold;
+  color: green;
+}
+
 footer {
-  background-color: #111111;
-  color: #FFD700;
+  margin-top: 2rem;
+  background-color: #f1f1f1;
+  padding: 10px 0;
+  font-size: 14px;
 }
