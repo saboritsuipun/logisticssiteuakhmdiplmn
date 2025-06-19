@@ -1,7 +1,111 @@
-/* Сховані секції, окрім активної */
+/* Загальні стилі */
+body {
+  background-color: #111; /* Темний фон */
+  color: #f0c419; /* Яскравий жовтий текст */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Хедер */
+header {
+  background-color: #000;
+  border-bottom: 4px solid #f0c419;
+}
+
+header h1 {
+  color: #f0c419;
+  font-weight: 700;
+}
+
+.nav-link {
+  color: #f0c419 !important;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #fff !important;
+  background-color: #f0c419;
+  border-radius: 4px;
+}
+
+/* Контейнер основного вмісту */
+main.container {
+  background-color: #1a1a1a;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 0 15px #f0c419;
+}
+
+/* Таблиці */
+table {
+  background-color: #222;
+  color: #f0c419;
+}
+
+table th {
+  background-color: #333;
+  border-bottom: 2px solid #f0c419;
+}
+
+table td, table th {
+  border: 1px solid #f0c419;
+  padding: 8px;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #2a2a2a;
+}
+
+/* Кнопки */
+.btn-primary {
+  background-color: #f0c419;
+  border: none;
+  color: #111;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #e6b30f;
+  color: #000;
+}
+
+.btn-danger {
+  background-color: #c40000;
+  border: none;
+  color: #fff;
+}
+
+.btn-danger:hover {
+  background-color: #a30000;
+}
+
+/* Секції вкладок */
 .tab-section {
   display: none;
 }
+
 .tab-section.active {
   display: block;
+}
+
+/* Footer */
+footer {
+  background-color: #000;
+  color: #f0c419;
+  border-top: 4px solid #f0c419;
+}
+
+/* Зображення авто на головній */
+#home img.car-photo {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #f0c419;
+  margin-top: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
