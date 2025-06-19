@@ -1,45 +1,7 @@
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #f8f9fa;
-  color: #333;
+/* Сховані секції, окрім активної */
+.tab-section {
+  display: none;
 }
-
-h2 {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  color: #2c3e50;
-}
-
-table {
-  background-color: #fff;
-}
-
-th {
-  background-color: #343a40;
-  color: #fff;
-  text-align: center;
-}
-
-td, th {
-  vertical-align: middle;
-}
-
-.btn {
-  min-width: 100px;
-}
-
-form .form-label {
-  font-weight: bold;
-}
-
-#orderMessage, #transportMessage {
-  font-weight: bold;
-  color: green;
-}
-
-footer {
-  margin-top: 2rem;
-  background-color: #f1f1f1;
-  padding: 10px 0;
-  font-size: 14px;
+.tab-section.active {
+  display: block;
 }
