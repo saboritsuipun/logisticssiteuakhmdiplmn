@@ -117,4 +117,51 @@ row.querySelector('.edit-btn').addEventListener('click', () => {
   // Видаляємо рядок з таблиці
   row.remove();
 });
+// Вставити після інших оголошень або методів
+document.addEventListener('DOMContentLoaded', () => {
+  const genBtn = document.getElementById('generate-report-btn');
+  const downloadBtn = document.getElementById('download-csv-btn');
+  const container = document.getElementById('report-container');
+
+  genBtn.addEventListener('click', () => {
+    // Отримати дані з localStorage (або іншого джерела)
+    const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+    const employees = JSON.parse(localStorage.getItem('employees') || '[]');
+
+    // Приклад: побудова звіту – кількість замовлень по працівниках
+    const reportData = employees.map(emp => {
+      const count = orders.filter(o => o.employeeId === emp.id).length;
+      return { name: emp.name, orders: count };
+    });
+
+    // Відобразити таблицю в DOM
+    let html = `<table border="1"><tr><th>Працівник</th><th>Замовлень</th></tr>`;
+    reportData.forEach(r => {
+      html += `<tr><td>${r.name}</td><td>${r.orders}</td></tr>`;
+    });
+    html += `</table>`;
+    container.innerHTML = html;
+
+    // Підготувати CSV
+    const csv = [
+      ['Працівник', 'Замовлень'],
+      ...reportData.map(r => [r.name, r.orders])
+    ].map(r => r.join(',')).join('\n');
+
+    // Зберігати CSV для завантаження
+    container.dataset.csv = csv;
+    downloadBtn.style.display = 'inline-block';
+  });
+
+  downloadBtn.addEventListener('click', () => {
+    const csv = container.dataset.csv;
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'report.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+});
 
