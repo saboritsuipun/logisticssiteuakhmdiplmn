@@ -1,7 +1,7 @@
 body {
   font-family: 'Segoe UI', sans-serif;
-  background-color: #111; /* темний фон */
-  color: #f2c200;         /* яскраво-жовтий текст */
+  background-color: #111;
+  color: #f2c200;
   margin: 0;
   padding: 0;
 }
@@ -13,6 +13,7 @@ h1, h2, h3, h4, h5, h6 {
 a, .nav-link {
   color: #f2c200;
   text-decoration: none;
+  transition: color 0.3s ease;
 }
 a:hover, .nav-link:hover {
   color: #fff;
@@ -46,7 +47,7 @@ button, .btn {
   background-color: #f2c200;
   color: #111;
   border: none;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 button:hover, .btn:hover {
@@ -65,10 +66,22 @@ button:hover, .btn:hover {
   color: #f2c200;
 }
 
+.table tbody tr:hover {
+  background-color: #333;
+}
+
 input, select, textarea {
   background-color: #000;
   color: #f2c200;
   border: 1px solid #f2c200;
+  padding: 0.5rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #ffd700;
+  box-shadow: 0 0 4px #ffd700;
 }
 
 input::placeholder, textarea::placeholder {
@@ -76,7 +89,7 @@ input::placeholder, textarea::placeholder {
 }
 
 #home {
-  background: url('https://i.pinimg.com/736x/57/1d/08/571d08e1accced1aae46fc3267b22a54.jpg') no-repeat center center;
+  background: url('img/bg.jpg') no-repeat center center;
   background-size: cover;
   color: #f2c200;
   padding: 4rem 2rem;
@@ -87,6 +100,13 @@ input::placeholder, textarea::placeholder {
   background-color: rgba(0, 0, 0, 0.6);
   padding: 1rem;
   border-radius: 0.5rem;
+}
+
+@media (max-width: 576px) {
+  #home h2, #home p, #home ul {
+    font-size: 1rem;
+    padding: 0.5rem;
+  }
 }
 
 .tab-section {
