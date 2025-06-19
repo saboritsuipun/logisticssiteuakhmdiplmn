@@ -1,12 +1,21 @@
+/* Головні стилі для темної теми з жовтим акцентом */
+
 .tab-section {
   display: none;
 }
 .tab-section.active {
   display: block;
 }
+
 .nav-link.active {
   font-weight: bold;
+  border-bottom: 2px solid #f2c200;
 }
+.nav-link.active:hover {
+  color: #ffd700;
+  text-decoration: underline;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -36,11 +45,6 @@ a:hover, .nav-link:hover {
 header {
   background-color: #000;
   border-bottom: 3px solid #f2c200;
-}
-
-.nav .nav-link.active {
-  font-weight: bold;
-  border-bottom: 2px solid #f2c200;
 }
 
 main {
@@ -103,7 +107,7 @@ input::placeholder, textarea::placeholder {
 }
 
 #home {
-  background: url('img/bg.jpg') no-repeat center center;
+  background: url('https://www.dtdexpress.hu/wp-content/uploads/2025/03/szallitasi-szolgaltatasok.jpg') no-repeat center center;
   background-size: cover;
   color: #f2c200;
   padding: 4rem 2rem;
@@ -121,14 +125,6 @@ input::placeholder, textarea::placeholder {
     font-size: 1rem;
     padding: 0.5rem;
   }
-}
-
-.tab-section {
-  display: none;
-}
-
-.tab-section.active {
-  display: block;
 }
 
 #orderMessage, #transportMessage, #employeeMessage {
