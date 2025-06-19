@@ -1,3 +1,17 @@
+.tab-section {
+  display: none;
+}
+.tab-section.active {
+  display: block;
+}
+.nav-link.active {
+  font-weight: bold;
+}
+img {
+  max-width: 100%;
+  height: auto;
+}
+
 body {
   font-family: 'Segoe UI', sans-serif;
   background-color: #111;
