@@ -1,4 +1,4 @@
-window.addEventListener('DOMContentLoaded', () => {More actions
+window.addEventListener('DOMContentLoaded', () => {
   let editingOrderId = null;
   const reportData = [];
 
