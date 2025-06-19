@@ -334,8 +334,5 @@ transportElements.form.addEventListener('submit', (e) => {
   transportElements.form.reset();
 });
 
-  renderTransport();
-  setupNavigation();
-  setupSearch();
 });
 
