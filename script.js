@@ -238,7 +238,106 @@ document.addEventListener('DOMContentLoaded', () => {
     XLSX.writeFile(wb, 'report.xlsx');
   });
   renderOrders();
-renderTransport();
-setupNavigation();
-setupSearch();
+  // === ТРАНСПОРТ ===
+let editingVehicleId = null;
+
+const transportElements = {
+  form: document.getElementById('transportForm'),
+  message: document.getElementById('transportMessage'),
+  tableBody: document.querySelector('#transportTable tbody')
+};
+
+function getTransportList() {
+  return JSON.parse(localStorage.getItem('transport')) || [];
+}
+function saveTransportList(data) {
+  localStorage.setItem('transport', JSON.stringify(data));
+}
+
+function renderTransport() {
+  const transportList = getTransportList();
+  transportElements.tableBody.innerHTML = '';
+  if (transportList.length === 0) {
+    transportElements.tableBody.innerHTML = `<tr><td colspan="6" class="text-center fst-italic">Немає транспортних засобів</td></tr>`;
+    return;
+  }
+
+  transportList.forEach(vehicle => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${vehicle.id}</td>
+      <td>${vehicle.brand}</td>
+      <td>${vehicle.model}</td>
+      <td>${vehicle.year}</td>
+      <td>${vehicle.number}</td>
+      <td>
+        <button class="btn btn-sm btn-warning edit-vehicle">Редагувати</button>
+        <button class="btn btn-sm btn-danger delete-vehicle">Видалити</button>
+      </td>
+    `;
+    transportElements.tableBody.appendChild(row);
+
+    // Редагування
+    row.querySelector('.edit-vehicle').addEventListener('click', () => {
+      document.getElementById('vehicleId').value = vehicle.id;
+      document.getElementById('vehicleBrand').value = vehicle.brand;
+      document.getElementById('vehicleModel').value = vehicle.model;
+      document.getElementById('vehicleYear').value = vehicle.year;
+      document.getElementById('vehicleNumber').value = vehicle.number;
+      editingVehicleId = vehicle.id;
+      transportElements.message.textContent = 'Редагування транспорту...';
+    });
+
+    // Видалення
+    row.querySelector('.delete-vehicle').addEventListener('click', () => {
+      if (confirm('Ви дійсно хочете видалити цей транспорт?')) {
+        const updatedList = getTransportList().filter(v => v.id !== vehicle.id);
+        saveTransportList(updatedList);
+        renderTransport();
+        transportElements.message.textContent = 'Транспорт видалено!';
+        if (editingVehicleId === vehicle.id) {
+          editingVehicleId = null;
+          transportElements.form.reset();
+        }
+      }
+    });
+  });
+}
+
+// Обробка форми
+transportElements.form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const vehicle = {
+    id: document.getElementById('vehicleId').value.trim(),
+    brand: document.getElementById('vehicleBrand').value.trim(),
+    model: document.getElementById('vehicleModel').value.trim(),
+    year: document.getElementById('vehicleYear').value.trim(),
+    number: document.getElementById('vehicleNumber').value.trim()
+  };
+
+  if (!vehicle.id || !vehicle.brand || !vehicle.model || !vehicle.year || !vehicle.number) {
+    alert('Будь ласка, заповніть усі поля транспорту.');
+    return;
+  }
+
+  let transportList = getTransportList();
+
+  if (editingVehicleId) {
+    transportList = transportList.map(v => v.id === editingVehicleId ? vehicle : v);
+    transportElements.message.textContent = 'Дані транспорту оновлено!';
+    editingVehicleId = null;
+  } else {
+    if (transportList.some(v => v.id === vehicle.id)) {
+      alert('Транспорт з таким ID вже існує!');
+      return;
+    }
+    transportList.push(vehicle);
+    transportElements.message.textContent = 'Транспорт додано!';
+  }
+
+  saveTransportList(transportList);
+  renderTransport();
+  transportElements.form.reset();
+});
+
 });
