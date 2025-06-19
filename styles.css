@@ -2,9 +2,14 @@ body {
   font-family: 'Segoe UI', sans-serif;
   background-color: #f8f9fa;
   color: #333;
+}
+
 /* Сховані секції, окрім активної */
 .tab-section {
   display: none;
+}
+.tab-section.active {
+  display: block;
 }
 
 h2 {
@@ -45,6 +50,4 @@ footer {
   background-color: #f1f1f1;
   padding: 10px 0;
   font-size: 14px;
-.tab-section.active {
-  display: block;
 }
