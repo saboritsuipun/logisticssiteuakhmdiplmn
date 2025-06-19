@@ -1,7 +1,6 @@
 window.addEventListener('DOMContentLoaded', () => {
   let editingOrderId = null;
-  const reportData = [];
-
+  // reportData можливо використовувати як глобальну змінну, але тут вона відокремлена.
   const elements = {
     orderForm: document.getElementById('orderForm'),
     orderMessage: document.getElementById('orderMessage'),
@@ -12,6 +11,7 @@ window.addEventListener('DOMContentLoaded', () => {
     genReportBtn: document.getElementById('generate-report-btn')
   };
 
+  /* Функція для відображення таблиці замовлень */
   function renderOrders() {
     const orders = JSON.parse(localStorage.getItem('orders')) || [];
     const tbody = document.querySelector('#ordersTable tbody');
@@ -55,6 +55,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  /* Обробка форми створення/редагування замовлення */
   elements.orderForm.addEventListener('submit', e => {
     e.preventDefault();
     const orderData = {
@@ -83,13 +84,27 @@ window.addEventListener('DOMContentLoaded', () => {
       orders.push(orderData);
       elements.orderMessage.textContent = 'Замовлення додано!';
     }
-
     localStorage.setItem('orders', JSON.stringify(orders));
     renderOrders();
     e.target.reset();
   });
 
-  // Генерація звіту
+  /* Функція генерації PDF звіту */
+  function generatePdfReport(reportObj) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFontSize(14);
+    doc.text('Звіт — Кількість замовлень по працівниках', 10, 10);
+
+    let y = 20;
+    reportObj.forEach(r => {
+      doc.text(`${r.name}: ${r.orders}`, 10, y);
+      y += 10;
+    });
+    doc.save('report.pdf');
+  }
+
+  /* Генерація звіту за натисканням кнопки генерування */
   elements.genReportBtn.addEventListener('click', () => {
     const orders = JSON.parse(localStorage.getItem('orders') || '[]');
     const employees = JSON.parse(localStorage.getItem('employees') || '[]');
@@ -100,7 +115,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     elements.reportContainer.innerHTML = `
-      <table border="1">
+      <table border="1" class="table table-bordered">
         <tr><th>Працівник</th><th>Замовлень</th></tr>
         ${report.map(r => `<tr><td>${r.name}</td><td>${r.orders}</td></tr>`).join('')}
       </table>
@@ -117,7 +132,7 @@ window.addEventListener('DOMContentLoaded', () => {
     [elements.csvBtn, elements.pdfBtn, elements.excelBtn].forEach(btn => btn.style.display = 'inline-block');
   });
 
-  // Завантаження CSV
+  /* Експорт звіту у формат CSV */
   elements.csvBtn.addEventListener('click', () => {
     const csv = elements.reportContainer.dataset.csv;
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -129,24 +144,13 @@ window.addEventListener('DOMContentLoaded', () => {
     URL.revokeObjectURL(url);
   });
 
-  // Завантаження PDF
+  /* Експорт звіту у формат PDF із використанням спеціальної функції */
   elements.pdfBtn.addEventListener('click', () => {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    doc.setFontSize(14);
-    doc.text("Звіт: Кількість замовлень по працівниках", 10, 10);
-
     const report = JSON.parse(elements.reportContainer.dataset.json);
-    let y = 20;
-    report.forEach(r => {
-      doc.text(`${r.name}: ${r.orders}`, 10, y);
-      y += 10;
-    });
-
-    doc.save('report.pdf');
+    generatePdfReport(report);
   });
 
-  // Завантаження Excel
+  /* Експорт звіту у формат Excel за допомогою SheetJS (xlsx) */
   elements.excelBtn.addEventListener('click', () => {
     const report = JSON.parse(elements.reportContainer.dataset.json);
     const ws = XLSX.utils.json_to_sheet(report);
@@ -155,7 +159,7 @@ window.addEventListener('DOMContentLoaded', () => {
     XLSX.writeFile(wb, 'report.xlsx');
   });
 
-  // Навігація
+  /* Навігація по сторінках */
   document.querySelectorAll('nav a[data-section]').forEach(link => {
     link.addEventListener('click', e => {
       e.preventDefault();
@@ -168,11 +172,11 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Показати таблицю замовлень одразу
+  /* Одразу показати таблицю замовлень при завантаженні сторінки */
   renderOrders();
 });
 
-// Генерація та експорт звіту: CSV / PDF / Excel
+/* Альтернативний блок для генерації та експорту звітів (якщо потрібна окрема логіка) */
 document.addEventListener('DOMContentLoaded', () => {
   const genBtn = document.getElementById('generate-report-btn');
   const downloadCSV = document.getElementById('download-csv-btn');
@@ -218,16 +222,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   downloadPDF?.addEventListener('click', () => {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    doc.setFontSize(14);
-    doc.text('Звіт — кількість замовлень по працівниках', 10, 10);
-    let y = 20;
-    JSON.parse(container.dataset.json).forEach(r => {
-      doc.text(`${r.name}: ${r.orders}`, 10, y);
-      y += 10;
-    });
-    doc.save('report.pdf');
+    const report = JSON.parse(container.dataset.json);
+    generatePdfReport(report);
   });
 
   downloadExcel?.addEventListener('click', () => {
