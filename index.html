@@ -8,43 +8,46 @@
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
-  <!-- Основні стилі -->
+  <!-- Підключення стилів (чорно-жовта тема) -->
   <link rel="stylesheet" href="style.css" />
 
-  <!-- Додаткові стилі -->
-  <style>
-    .tab-section { display: none; }
-    .tab-section.active { display: block; }
-  </style>
-
-  <!-- Бібліотеки для експорту -->
+  <!-- Підключення бібліотек для експорту -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 </head>
 
 <body>
-  <header class="bg-dark text-white p-3">
+  <header class="p-3">
     <div class="container d-flex justify-content-between align-items-center">
       <h1 class="h4 m-0">Система управління логістикою</h1>
       <nav>
         <ul class="nav">
-          <li class="nav-item"><a class="nav-link text-white active" href="#" data-section="home">Головна</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="#" data-section="orders">Замовлення</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="#" data-section="transport">Транспорт</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="#" data-section="employees">Працівники</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="#" data-section="reports">Звіти</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="#" data-section="contact">Контакти</a></li>
+          <li class="nav-item"><a class="nav-link active" href="#" data-section="home">Головна</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" data-section="orders">Замовлення</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" data-section="transport">Транспорт</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" data-section="employees">Працівники</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" data-section="reports">Звіти</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" data-section="contact">Контакти</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
   <main class="container my-4">
+    <!-- Головна -->
     <section id="home" class="tab-section active">
       <h2>Головна</h2>
       <p>Ласкаво просимо до системи управління логістикою.</p>
+      <ul>
+        <li>Перегляд і додавання замовлень</li>
+        <li>Контроль транспорту</li>
+        <li>Керування працівниками</li>
+        <li>Створення звітів</li>
+        <li>Зворотній зв’язок</li>
+      </ul>
     </section>
 
+    <!-- Замовлення -->
     <section id="orders" class="tab-section">
       <h2>Замовлення</h2>
       <table class="table table-bordered" id="ordersTable">
@@ -65,11 +68,12 @@
         </div>
         <div class="col-12">
           <button class="btn btn-primary" type="submit">Зберегти</button>
-          <p id="orderMessage" class="mt-2 text-success"></p>
+          <p id="orderMessage" class="mt-2"></p>
         </div>
       </form>
     </section>
 
+    <!-- Транспорт -->
     <section id="transport" class="tab-section">
       <h2>Транспорт</h2>
       <table class="table table-bordered" id="transportTable">
@@ -84,11 +88,12 @@
         <div class="col-md-4"><input type="text" id="vehicleNumber" class="form-control" placeholder="Номер" required /></div>
         <div class="col-12">
           <button class="btn btn-primary" type="submit">Зберегти</button>
-          <p id="transportMessage" class="mt-2 text-success"></p>
+          <p id="transportMessage" class="mt-2"></p>
         </div>
       </form>
     </section>
 
+    <!-- Працівники -->
     <section id="employees" class="tab-section">
       <h2>Працівники</h2>
       <table class="table table-bordered" id="employeeTable">
@@ -106,6 +111,7 @@
       </form>
     </section>
 
+    <!-- Звіти -->
     <section id="reports" class="tab-section">
       <h2>Звіти</h2>
       <button id="generate-report-btn" class="btn btn-primary mb-2">Згенерувати звіт</button>
@@ -115,17 +121,18 @@
       <div id="report-container" class="table-responsive mt-3"></div>
     </section>
 
+    <!-- Контакти -->
     <section id="contact" class="tab-section">
       <h2>Контакти</h2>
       <p>Email: support@logistikasystem.ua<br>Телефон: +380501234567</p>
     </section>
   </main>
 
-  <footer class="bg-light text-center py-3">
+  <footer>
     <p class="mb-0">&copy; 2025 ЛогістикаSoft</p>
   </footer>
 
+  <!-- Основний скрипт -->
   <script src="script.js"></script>
 </body>
 </html>
-
