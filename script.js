@@ -237,4 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Початкове завантаження таблиці замовлень
   renderOrders();
+  renderTransport();
+
 });
+
