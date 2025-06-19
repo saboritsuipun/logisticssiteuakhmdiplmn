@@ -519,3 +519,18 @@
 
 </body>
 </html>
+<section id="reports" class="tab-section">
+  <h2>Звіти</h2>
+  <p>Звіти за періодами. Генеруйте звіт по замовленнях працівників.</p>
+
+  <!-- Додані контролери для звіту -->
+  <div class="mb-3">
+    <button id="generate-report-btn" class="btn btn-primary">Згенерувати звіт</button>
+    <button id="download-csv-btn" class="btn btn-secondary" style="display:none;">CSV</button>
+    <button id="download-pdf-btn" class="btn btn-secondary" style="display:none;">PDF</button>
+    <button id="download-excel-btn" class="btn btn-secondary" style="display:none;">Excel</button>
+  </div>
+
+  <!-- Контейнер для виводу звіту -->
+  <div id="report-container" class="table-responsive"></div>
+</section>
