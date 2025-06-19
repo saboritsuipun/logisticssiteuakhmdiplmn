@@ -4,29 +4,37 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Система логістики</title>
+
+  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css" />
+
+  <!-- Підключення стилів (чорно-жовта тема) -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Підключення бібліотек для експорту -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 </head>
+
 <body>
-  <header class="p-3 bg-dark text-white">
+  <header class="p-3">
     <div class="container d-flex justify-content-between align-items-center">
       <h1 class="h4 m-0">Система управління логістикою</h1>
       <nav>
         <ul class="nav">
-          <li class="nav-item"><a class="nav-link active text-warning" href="#" data-section="home">Головна</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="#" data-section="orders">Замовлення</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="#" data-section="transport">Транспорт</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="#" data-section="employees">Працівники</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="#" data-section="reports">Звіти</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="#" data-section="contact">Контакти</a></li>
+          <li class="nav-item"><a class="nav-link active" href="#" data-section="home">Головна</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" data-section="orders">Замовлення</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" data-section="transport">Транспорт</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" data-section="employees">Працівники</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" data-section="reports">Звіти</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" data-section="contact">Контакти</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
   <main class="container my-4">
+    <!-- Головна -->
     <section id="home" class="tab-section active">
       <h2>Головна</h2>
       <p>Ласкаво просимо до системи управління логістикою.</p>
@@ -37,78 +45,94 @@
         <li>Створення звітів</li>
         <li>Зворотній зв’язок</li>
       </ul>
-      <img src="img/logistics-map.png" alt="логістична карта" class="img-fluid rounded shadow mt-3">
     </section>
 
+    <!-- Замовлення -->
     <section id="orders" class="tab-section">
       <h2>Замовлення</h2>
-      <input type="text" id="searchOrders" placeholder="Пошук замовлень..." class="form-control mb-2">
       <table class="table table-bordered" id="ordersTable">
         <thead><tr><th>ID</th><th>Дата</th><th>Сума</th><th>Статус</th><th>Дії</th></tr></thead>
         <tbody></tbody>
       </table>
       <form id="orderForm" class="row g-3">
-        <div class="col-md-3"><input type="text" id="orderId" class="form-control" placeholder="ID" required></div>
-        <div class="col-md-3"><input type="date" id="orderDate" class="form-control" required></div>
-        <div class="col-md-3"><input type="text" id="orderAmount" class="form-control" placeholder="Сума" required></div>
-        <div class="col-md-3"><input type="text" id="orderStatus" class="form-control" placeholder="Статус" required></div>
-        <div class="col-12"><button type="submit" class="btn btn-primary">Зберегти</button><p id="orderMessage"></p></div>
+        <div class="col-md-4"><input type="text" id="orderId" class="form-control" placeholder="ID" required /></div>
+        <div class="col-md-4"><input type="date" id="orderDate" class="form-control" required /></div>
+        <div class="col-md-4"><input type="text" id="orderAmount" class="form-control" placeholder="Сума" required /></div>
+        <div class="col-md-4">
+          <select id="orderStatus" class="form-select" required>
+            <option value="">Статус</option>
+            <option value="Оброблено">Оброблено</option>
+            <option value="В очікуванні">В очікуванні</option>
+            <option value="Скасовано">Скасовано</option>
+          </select>
+        </div>
+        <div class="col-12">
+          <button class="btn btn-primary" type="submit">Зберегти</button>
+          <p id="orderMessage" class="mt-2"></p>
+        </div>
       </form>
     </section>
 
+    <!-- Транспорт -->
     <section id="transport" class="tab-section">
       <h2>Транспорт</h2>
-      <input type="text" id="searchTransport" placeholder="Пошук транспорту..." class="form-control mb-2">
       <table class="table table-bordered" id="transportTable">
         <thead><tr><th>ID</th><th>Марка</th><th>Модель</th><th>Рік</th><th>Номер</th><th>Дії</th></tr></thead>
         <tbody></tbody>
       </table>
       <form id="transportForm" class="row g-3">
-        <div class="col-md-2"><input type="text" id="vehicleId" class="form-control" placeholder="ID" required></div>
-        <div class="col-md-2"><input type="text" id="vehicleBrand" class="form-control" placeholder="Марка" required></div>
-        <div class="col-md-2"><input type="text" id="vehicleModel" class="form-control" placeholder="Модель" required></div>
-        <div class="col-md-2"><input type="number" id="vehicleYear" class="form-control" placeholder="Рік" required></div>
-        <div class="col-md-2"><input type="text" id="vehicleNumber" class="form-control" placeholder="Номер" required></div>
-        <div class="col-md-2"><button type="submit" class="btn btn-primary w-100">Зберегти</button></div>
-        <div class="col-12"><p id="transportMessage"></p></div>
+        <div class="col-md-4"><input type="text" id="vehicleId" class="form-control" placeholder="ID" required /></div>
+        <div class="col-md-4"><input type="text" id="vehicleBrand" class="form-control" placeholder="Марка" required /></div>
+        <div class="col-md-4"><input type="text" id="vehicleModel" class="form-control" placeholder="Модель" required /></div>
+        <div class="col-md-4"><input type="number" id="vehicleYear" class="form-control" placeholder="Рік" required /></div>
+        <div class="col-md-4"><input type="text" id="vehicleNumber" class="form-control" placeholder="Номер" required /></div>
+        <div class="col-12">
+          <button class="btn btn-primary" type="submit">Зберегти</button>
+          <p id="transportMessage" class="mt-2"></p>
+        </div>
       </form>
     </section>
 
+    <!-- Працівники -->
     <section id="employees" class="tab-section">
       <h2>Працівники</h2>
       <table class="table table-bordered" id="employeeTable">
         <thead><tr><th>ID</th><th>ПІБ</th><th>Посада</th><th>Email</th><th>Телефон</th></tr></thead>
-        <tbody></tbody>
+        <tbody>
+          <tr><td>001</td><td>Іваненко І.І.</td><td>Водій</td><td>ivan@example.com</td><td>+380631112233</td></tr>
+        </tbody>
       </table>
       <form id="employeeForm" class="row g-3">
-        <div class="col-md-2"><input type="text" id="empId" class="form-control" placeholder="ID" required></div>
-        <div class="col-md-3"><input type="text" id="name" class="form-control" placeholder="ПІБ" required></div>
-        <div class="col-md-3"><input type="text" id="position" class="form-control" placeholder="Посада" required></div>
-        <div class="col-md-2"><input type="email" id="email" class="form-control" placeholder="Email" required></div>
-        <div class="col-md-2"><input type="tel" id="phone" class="form-control" placeholder="Телефон" required></div>
-        <div class="col-12"><button class="btn btn-primary" type="submit">Додати</button><p id="employeeMessage"></p></div>
+        <div class="col-md-6"><input type="text" id="name" class="form-control" placeholder="ПІБ" required /></div>
+        <div class="col-md-6"><input type="text" id="position" class="form-control" placeholder="Посада" required /></div>
+        <div class="col-md-6"><input type="email" id="email" class="form-control" placeholder="Email" required /></div>
+        <div class="col-md-6"><input type="tel" id="phone" class="form-control" placeholder="Телефон" required /></div>
+        <div class="col-12"><button class="btn btn-primary" type="submit">Додати</button></div>
       </form>
     </section>
 
+    <!-- Звіти -->
     <section id="reports" class="tab-section">
       <h2>Звіти</h2>
       <button id="generate-report-btn" class="btn btn-primary mb-2">Згенерувати звіт</button>
-      <button id="download-csv-btn" class="btn btn-secondary d-none">CSV</button>
-      <button id="download-pdf-btn" class="btn btn-secondary d-none">PDF</button>
-      <button id="download-excel-btn" class="btn btn-secondary d-none">Excel</button>
+      <button id="download-csv-btn" class="btn btn-secondary" style="display:none;">CSV</button>
+      <button id="download-pdf-btn" class="btn btn-secondary" style="display:none;">PDF</button>
+      <button id="download-excel-btn" class="btn btn-secondary" style="display:none;">Excel</button>
       <div id="report-container" class="table-responsive mt-3"></div>
     </section>
 
+    <!-- Контакти -->
     <section id="contact" class="tab-section">
       <h2>Контакти</h2>
-      <p>Email: support@logistika.ua<br>Телефон: +380501234567</p>
+      <p>Email: support@logistikasystem.ua<br>Телефон: +380501234567</p>
     </section>
   </main>
 
-  <footer class="text-center py-3 bg-dark text-white">
+  <footer>
     <p class="mb-0">&copy; 2025 ЛогістикаSoft</p>
   </footer>
 
-  <script src="js/script.js"></script>
+  <!-- Основний скрипт -->
+  <script src="script.js"></script>
 </body>
 </html>
