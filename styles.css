@@ -2,6 +2,9 @@ body {
   font-family: 'Segoe UI', sans-serif;
   background-color: #f8f9fa;
   color: #333;
+/* Сховані секції, окрім активної */
+.tab-section {
+  display: none;
 }
 
 h2 {
@@ -42,87 +45,6 @@ footer {
   background-color: #f1f1f1;
   padding: 10px 0;
   font-size: 14px;
-}
-
-body {
-  background-color: #000000; /* Чорний фон для сторінки */
-  color: #FFD700;           /* Жовтий текст */
-  font-family: 'Arial', sans-serif;
-}
-
-/* Заголовки */
-h1, h2, h3, h4, h5, h6 {
-  color: #FFD700;
-}
-
-/* Посилання */
-a {
-  color: #FFD700;
-  text-decoration: none;
-  transition: color 0.3s;
-}
-
-a:hover {
-  color: #ffdf00; /* Можна трохи змінити відтінок при наведенні */
-}
-
-/* Навігаційне меню */
-nav ul {
-  list-style: none;
-  display: flex;
-  padding-left: 0;
-}
-nav ul li {
-  margin-right: 20px;
-}
-nav ul li a {
-  padding: 8px 12px;
-  background-color: #222222;
-  border-radius: 4px;
-}
-nav ul li a.active, nav ul li a:hover {
-  background-color: #FFD700;
-  color: #000;
-}
-
-/* Кнопки */
-.btn-primary {
-  background-color: #FFD700;
-  border: none;
-  color: #000;
-  transition: background-color 0.3s;
-}
-.btn-primary:hover {
-  background-color: #ffdf00;
-}
-.btn-secondary {
-  background-color: #333333;
-  color: #FFD700;
-  border: 1px solid #FFD700;
-  transition: background-color 0.3s, color 0.3s;
-}
-.btn-secondary:hover {
-  background-color: #FFD700;
-  color: #000;
-}
-
-/* Форми */
-input, select, textarea {
-  background-color: #222222;
-  border: 1px solid #FFD700;Add commentMore actions
-  color: #FFD700;
-}
-input::placeholder, textarea::placeholder {
-  color: #aaa;
-}
-
-/* Header */
-header {
-  background-color: #111111;
-}
-
-/* Footer */
-footer {
-  background-color: #111111;
-  color: #FFD700;
+.tab-section.active {
+  display: block;
 }
