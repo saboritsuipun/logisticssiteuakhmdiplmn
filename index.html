@@ -1,8 +1,8 @@
-<!DOCTYPE html>More actions
+<!DOCTYPE html>
 <html lang="uk">
 <head>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Система логістики</title>
@@ -495,7 +495,7 @@
       orders = orders.map(o => o.id === editingOrderId ? data : o);
       showMessage('Замовлення оновлено!');
       editingOrderId = null;
-      formTitle.textContent = 'Додати замовлення';More actions
+      formTitle.textContent = 'Додати замовлення';
     } else {
       // Перевірка унікальності ID
       if(orders.some(o => o.id === data.id)) {
@@ -505,7 +505,7 @@
       orders.push(data);
       showMessage('Замовлення додано!');
     }
-
+More actions
     saveOrders(orders);
     renderOrders();
     resetForm();
