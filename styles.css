@@ -1,178 +1,97 @@
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #f8f9fa;
+body {Add commentMore actions
+  font-family: "Times New Roman", serif;
+  background-color: #ffffff;
   color: #333;
+  line-height: 1.6;
+  background-color: #000000; /* Чорний фон для сторінки */
+  color: #FFD700;           /* Жовтий текст */
+  font-family: 'Arial', sans-serif;
 }
 
-h2 {
-  margin-top: 1rem;
+header, footer {
   margin-bottom: 1rem;
-  color: #2c3e50;
+/* Заголовки */
+h1, h2, h3, h4, h5, h6 {
+  color: #FFD700;
 }
 
-table {
-  background-color: #fff;
-}
-
-th {
-  background-color: #343a40;
-  color: #fff;
-  text-align: center;
-}
-
-td, th {
-  vertical-align: middle;
-}
-
-.btn {
-  min-width: 100px;
-}
-
-form .form-label {
-  font-weight: bold;
-}
-
-#orderMessage, #transportMessage {
-  font-weight: bold;
-  color: green;
-}
-
-footer {
-  margin-top: 2rem;
-  background-color: #f1f1f1;
-  padding: 10px 0;
-  font-size: 14px;
-}
-header .container > button {
-  font-size: 0;     /* прибирає видимий "+" */
-  width: 0;Add commentMore actions
-  padding: 0;
-  border: none;
+/* Сховати всі секції, окрім активної */
+.tab-section {
   display: none;
+/* Посилання */
+a {
+  color: #FFD700;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.tab-section.active {
+  display: block;
+a:hover {
+  color: #ffdf00; /* Можна трохи змінити відтінок при наведенні */
 }
 
-/* А так робимо непомітною саму кнопку */
-header .container > button::before {
-  content: none;
+/* Стилізація активного пункту меню */
+nav a.active {
+  font-weight: bold;
+  text-decoration: underline;
+  color: #ffc107;
+/* Навігаційне меню */
+nav ul {
+  list-style: none;
+  display: flex;
+  padding-left: 0;
 }
-body {
-  background-color: #111; /* Темний фон */
-  color: #f0c419; /* Яскравий жовтий текст */
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
-  padding: 0;
+nav ul li {
+  margin-right: 20px;
 }
-
-/* Хедер */
-header {
-  background-color: #000;
-  border-bottom: 4px solid #f0c419;
-}
-
-header h1 {
-  color: #f0c419;
-  font-weight: 700;
-}
-
-.nav-link {
-  color: #f0c419 !important;
-  transition: color 0.3s ease;
-}
-
-.nav-link:hover,
-.nav-link.active {
-  color: #fff !important;
-  background-color: #f0c419;
+nav ul li a {
+  padding: 8px 12px;
+  background-color: #222222;
   border-radius: 4px;
 }
-
-/* Контейнер основного вмісту */
-main.container {
-  background-color: #1a1a1a;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 0 15px #f0c419;
-}
-
-/* Таблиці */
-table {
-  background-color: #222;
-  color: #f0c419;
-}
-
-table th {
-  background-color: #333;
-  border-bottom: 2px solid #f0c419;
-}
-
-table td, table th {
-  border: 1px solid #f0c419;
-  padding: 8px;
-}
-
-.table-striped tbody tr:nth-of-type(odd) {
-  background-color: #2a2a2a;
+nav ul li a.active, nav ul li a:hover {
+  background-color: #FFD700;
+  color: #000;
 }
 
 /* Кнопки */
 .btn-primary {
-  background-color: #f0c419;
+  background-color: #FFD700;
   border: none;
-  color: #111;
-  font-weight: 600;
-  transition: background-color 0.3s ease;
+  color: #000;
+  transition: background-color 0.3s;Add commentMore actions
 }
-
 .btn-primary:hover {
-  background-color: #e6b30f;
+  background-color: #ffdf00;
+}
+.btn-secondary {
+  background-color: #333333;
+  color: #FFD700;
+  border: 1px solid #FFD700;
+  transition: background-color 0.3s, color 0.3s;
+}
+.btn-secondary:hover {
+  background-color: #FFD700;
   color: #000;
 }
 
-.btn-danger {
-  background-color: #c40000;
-  border: none;
-  color: #fff;
+/* Форми */
+input, select, textarea {
+  background-color: #222222;
+  border: 1px solid #FFD700;
+  color: #FFD700;
+}
+input::placeholder, textarea::placeholder {
+  color: #aaa;
 }
 
-.btn-danger:hover {
-  background-color: #a30000;
-}
-
-/* Секції вкладок */
-.tab-section {
-  display: none;
-}
-
-.tab-section.active {
-  display: block;
+/* Header */
+header {
+  background-color: #111111;
 }
 
 /* Footer */
 footer {
-  background-color: #000;
-  color: #f0c419;
-  border-top: 4px solid #f0c419;
-}
-
-/* Зображення авто на головній */
-#home img.car-photo {
-  max-width: 100%;
-  height: auto;
-  border-radius: 10px;
-  box-shadow: 0 0 15px #f0c419;
-  margin-top: 20px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-#searchInput {
-  background-color: #222;
-  color: #f0c419;
-  border: 1px solid #f0c419;
-}
-#searchBtn {
-  color: #111;
-  background-color: #f0c419;
-  border: none;
-  font-weight: bold;
+  background-color: #111111;
+  color: #FFD700;
 }
