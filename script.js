@@ -1,295 +1,242 @@
-window.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {More actions
+  // Частина коду для управління замовленнями
   let editingOrderId = null;
-  let editingVehicleId = null;
 
-  // ======= Elements =======
+  // Елементи замовлень і звітів
   const elements = {
+    // Елементи форми замовлень та повідомлень
     orderForm: document.getElementById('orderForm'),
-    orderTable: document.querySelector('#ordersTable tbody'),
     orderMessage: document.getElementById('orderMessage'),
-
-    transportForm: document.getElementById('transportForm'),
-    transportTable: document.querySelector('#transportTable tbody'),
-    transportMessage: document.getElementById('transportMessage'),
-
-    employeeForm: document.getElementById('employeeForm'),
-    employeeTable: document.querySelector('#employeeTable tbody'),
-
+    // Елементи таблиці замовлень (свій власний контейнер у секції "Замовлення")
+    ordersTableBody: document.querySelector('#ordersTable tbody'),
+    // Елементи секції звітів
     reportContainer: document.getElementById('report-container'),
     csvBtn: document.getElementById('download-csv-btn'),
     pdfBtn: document.getElementById('download-pdf-btn'),
     excelBtn: document.getElementById('download-excel-btn'),
-    genReportBtn: document.getElementById('generate-report-btn'),
-    searchBtn: document.getElementById('searchBtn'),
-    searchInput: document.getElementById('searchInput')
+    genReportBtn: document.getElementById('generate-report-btn')
   };
 
-  // ======= Storage Utils =======
-  const storage = {
-    get: key => JSON.parse(localStorage.getItem(key) || '[]'),
-    set: (key, val) => localStorage.setItem(key, JSON.stringify(val))
-  };
+  /* --- Функції для роботи із замовленнями --- */
 
-  // ======= Orders =======
+  // Завантаження замовлень із localStorage
+  function getOrders() {
+    return JSON.parse(localStorage.getItem('orders')) || [];
+  }
+
+  // Збереження замовлень у localStorage
+  function saveOrders(orders) {
+    localStorage.setItem('orders', JSON.stringify(orders));
+  }
+
+  // Відмалювання таблиці замовлень
   function renderOrders() {
-    const orders = storage.get('orders');
-    elements.orderTable.innerHTML = orders.length ? '' : `<tr><td colspan="5" class="text-center fst-italic">Немає замовлень</td></tr>`;
+    const orders = getOrders();
+    elements.ordersTableBody.innerHTML = '';
+
+    if (orders.length === 0) {
+      const row = document.createElement('tr');
+      row.innerHTML = `<td colspan="5" class="text-center fst-italic">Замовлень немає</td>`;
+      elements.ordersTableBody.appendChild(row);
+      return;
+    }
 
     orders.forEach(order => {
       const row = document.createElement('tr');
       row.innerHTML = `
         <td>${order.id}</td>
         <td>${order.date}</td>
-        <td>${order.amount}</td>
+        <td>${parseFloat(order.amount).toFixed(2)}</td>
         <td>${order.status}</td>
         <td>
-          <button class="btn btn-sm btn-warning edit">Редагувати</button>
-          <button class="btn btn-sm btn-danger delete">Видалити</button>
-        </td>`;
-      elements.orderTable.appendChild(row);
+          <button class="edit-btn btn btn-sm btn-warning">Редагувати</button>
+          <button class="delete-btn btn btn-sm btn-danger">Видалити</button>
+        </td>
+      `;
+      elements.ordersTableBody.appendChild(row);
 
-      row.querySelector('.edit').onclick = () => {
-        ['orderId', 'orderDate', 'orderAmount', 'orderStatus'].forEach(id => {
-          document.getElementById(id).value = order[id.replace('order', '').toLowerCase()];
-        });
+      // Редагування замовлення
+      row.querySelector('.edit-btn').addEventListener('click', () => {
+        document.getElementById('orderId').value = order.id;
+        document.getElementById('orderDate').value = order.date;
+        document.getElementById('orderAmount').value = order.amount;
+        document.getElementById('orderStatus').value = order.status;
         editingOrderId = order.id;
-        showMessage(elements.orderMessage, 'Редагування замовлення...');
-      };
+        elements.orderMessage.textContent = 'Редагування замовлення...';
+      });
 
-      row.querySelector('.delete').onclick = () => {
-        if (confirm('Видалити це замовлення?')) {
-          const updated = orders.filter(o => o.id !== order.id);
-          storage.set('orders', updated);
+      // Видалення замовлення
+      row.querySelector('.delete-btn').addEventListener('click', () => {
+        if (confirm('Ви дійсно хочете видалити це замовлення?')) {
+          let ordersUpdated = orders.filter(o => o.id !== order.id);
+          saveOrders(ordersUpdated);
           renderOrders();
-          showMessage(elements.orderMessage, 'Замовлення видалено!');
+          elements.orderMessage.textContent = 'Замовлення видалено!';
+          if (editingOrderId === order.id) {
+            editingOrderId = null;
+            elements.orderForm.reset();
+          }
         }
-      };
+      });
     });
   }
 
-  elements.orderForm.onsubmit = e => {
+  // Обробка форми додавання/редагування замовлення
+  elements.orderForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const order = {
-      id: orderId.value.trim(),
-      date: orderDate.value.trim(),
-      amount: orderAmount.value.trim(),
-      status: orderStatus.value.trim()
+
+    const orderData = {
+      id: document.getElementById('orderId').value.trim(),
+      date: document.getElementById('orderDate').value,
+      amount: document.getElementById('orderAmount').value,
+      status: document.getElementById('orderStatus').value
     };
-    if (Object.values(order).includes('')) return alert('Заповніть усі поля!');
-    let orders = storage.get('orders');
-    if (editingOrderId) {
-      orders = orders.map(o => o.id === editingOrderId ? order : o);
-      showMessage(elements.orderMessage, 'Замовлення оновлено!');
-      editingOrderId = null;
-    } else {
-      if (orders.some(o => o.id === order.id)) return alert('ID вже існує!');
-      orders.push(order);
-      showMessage(elements.orderMessage, 'Замовлення додано!');
-    }
-    storage.set('orders', orders);
-    renderOrders();
-    elements.orderForm.reset();
-  };
 
-  // ======= Transport =======
-  function renderTransport() {
-    const list = storage.get('transport');
-    elements.transportTable.innerHTML = list.length ? '' : `<tr><td colspan="6" class="text-center fst-italic">Немає транспорту</td></tr>`;
-    list.forEach(vehicle => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${vehicle.id}</td>
-        <td>${vehicle.brand}</td>
-        <td>${vehicle.model}</td>
-        <td>${vehicle.year}</td>
-        <td>${vehicle.number}</td>
-        <td>
-          <button class="btn btn-sm btn-warning edit">Редагувати</button>
-          <button class="btn btn-sm btn-danger delete">Видалити</button>
-        </td>`;
-      elements.transportTable.appendChild(row);
-
-      row.querySelector('.edit').onclick = () => {
-        ['vehicleId', 'vehicleBrand', 'vehicleModel', 'vehicleYear', 'vehicleNumber'].forEach(id => {
-          document.getElementById(id).value = vehicle[id.replace('vehicle', '').toLowerCase()];
-        });
-        editingVehicleId = vehicle.id;
-        showMessage(elements.transportMessage, 'Редагування транспорту...');
-      };
-
-      row.querySelector('.delete').onclick = () => {
-        if (confirm('Видалити транспорт?')) {
-          const updated = list.filter(v => v.id !== vehicle.id);
-          storage.set('transport', updated);
-          renderTransport();
-          showMessage(elements.transportMessage, 'Транспорт видалено!');
-        }
-      };
-    });
-  }
-
-  elements.transportForm.onsubmit = e => {
-    e.preventDefault();
-    const v = {
-      id: vehicleId.value.trim(),
-      brand: vehicleBrand.value.trim(),
-      model: vehicleModel.value.trim(),
-      year: vehicleYear.value.trim(),
-      number: vehicleNumber.value.trim()
-    };
-    if (Object.values(v).includes('')) return alert('Заповніть усі поля!');
-    let list = storage.get('transport');
-    if (editingVehicleId) {
-      list = list.map(vh => vh.id === editingVehicleId ? v : vh);
-      editingVehicleId = null;
-      showMessage(elements.transportMessage, 'Транспорт оновлено!');
-    } else {
-      if (list.some(vh => vh.id === v.id)) return alert('ID вже існує!');
-      list.push(v);
-      showMessage(elements.transportMessage, 'Транспорт додано!');
-    }
-    storage.set('transport', list);
-    renderTransport();
-    elements.transportForm.reset();
-  };
-
-  // ======= Employees =======
-  function renderEmployees() {
-    const list = storage.get('employees');
-    elements.employeeTable.innerHTML = list.length ? '' : `<tr><td colspan="6" class="text-center fst-italic">Немає працівників</td></tr>`;
-    list.forEach(emp => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${emp.id}</td>
-        <td>${emp.name}</td>
-        <td>${emp.position}</td>
-        <td>${emp.email}</td>
-        <td>${emp.phone}</td>
-        <td><button class="btn btn-sm btn-danger delete">Видалити</button></td>`;
-      elements.employeeTable.appendChild(row);
-
-      row.querySelector('.delete').onclick = () => {
-        const updated = list.filter(e => e.id !== emp.id);
-        storage.set('employees', updated);
-        renderEmployees();
-      };
-    });
-  }
-
-  elements.employeeForm.onsubmit = e => {
-    e.preventDefault();
-    const emp = {
-      id: name.value.trim(),
-      name: name.value.trim(),
-      position: position.value.trim(),
-      email: email.value.trim(),
-      phone: phone.value.trim()
-    };
-    if (Object.values(emp).includes('')) return alert('Заповніть усі поля!');
-    const list = storage.get('employees');
-    list.push(emp);
-    storage.set('employees', list);
-    elements.employeeForm.reset();
-    renderEmployees();
-  };
-
-  // ======= Reports =======
-  elements.genReportBtn.onclick = () => {
-    const orders = storage.get('orders');
-    if (!orders.length) {
-      elements.reportContainer.innerHTML = '<p>Немає даних для звіту.</p>';
-      elements.csvBtn.style.display = elements.pdfBtn.style.display = elements.excelBtn.style.display = 'none';
+    // Є базова валідація
+    if (!orderData.id || !orderData.date || !orderData.amount || !orderData.status) {
+      alert('Будь ласка, заповніть усі поля замовлення.');
       return;
     }
-    let html = `<table class="table table-bordered"><thead><tr><th>ID</th><th>Дата</th><th>Сума</th><th>Статус</th></tr></thead><tbody>`;
-    orders.forEach(o => {
-      html += `<tr><td>${o.id}</td><td>${o.date}</td><td>${o.amount}</td><td>${o.status}</td></tr>`;
-    });
-    html += '</tbody></table>';
-    elements.reportContainer.innerHTML = html;
-    elements.csvBtn.style.display = elements.pdfBtn.style.display = elements.excelBtn.style.display = 'inline-block';
-  };
 
- elements.csvBtn.onclick = () => {
-  const orders = storage.get('orders');
-  let csv = 'ID,Дата,Сума,Статус\n';
-  orders.forEach(o => {
-    csv += `${o.id},${o.date},${o.amount},${o.status}\n`;
-  });
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = 'orders_report.csv';
-  link.click();
-};
-elements.pdfBtn.onclick = () => {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  const orders = storage.get('orders');
+    let orders = getOrders();
 
-  doc.setFontSize(16);
-  doc.text('Звіт по замовленнях', 15, 20);
-
-  let y = 30;
-  orders.forEach((o, i) => {
-    doc.text(`${i + 1}. ID: ${o.id}, Дата: ${o.date}, Сума: ${o.amount}, Статус: ${o.status}`, 10, y);
-    y += 10;
-    if (y > 280) {
-      doc.addPage();
-      y = 20;
-    }
-  });
-
-  doc.save('orders_report.pdf');
-};
-elements.excelBtn.onclick = () => {
-  const orders = storage.get('orders');
-  const ws_data = [
-    ['ID', 'Дата', 'Сума', 'Статус'],
-    ...orders.map(o => [o.id, o.date, o.amount, o.status])
-  ];
-  const wb = XLSX.utils.book_new();
-  const ws = XLSX.utils.aoa_to_sheet(ws_data);
-  XLSX.utils.book_append_sheet(wb, ws, 'Orders');
-  XLSX.writeFile(wb, 'orders_report.xlsx');
-};
-
-
-  // ======= Пошук =======
-  elements.searchBtn.onclick = () => {
-    const q = elements.searchInput.value.toLowerCase();
-    if (!q) return;
-    const sections = document.querySelectorAll('.tab-section');
-    let found = false;
-    sections.forEach(sec => {
-      sec.classList.remove('active');
-      if (sec.innerText.toLowerCase().includes(q)) {
-        sec.classList.add('active');
-        found = true;
+    if (editingOrderId) {
+      // Оновлення замовлення
+      if (editingOrderId !== orderData.id && orders.some(o => o.id === orderData.id)) {
+        alert('Замовлення з таким ID вже існує!');
+        return;
       }
-    });
-    if (!found) alert('Нічого не знайдено!');
-  };
+      orders = orders.map(o => o.id === editingOrderId ? orderData : o);
+      elements.orderMessage.textContent = 'Замовлення оновлено!';
+      editingOrderId = null;
+    } else {
+      // Додавання нового замовлення
+      if (orders.some(o => o.id === orderData.id)) {
+        alert('Замовлення з таким ID вже існує!');
+        return;
+      }
+      orders.push(orderData);
+      elements.orderMessage.textContent = 'Замовлення додано!';
+    }
 
-  // ======= Навігація =======
-  document.querySelectorAll('[data-section]').forEach(link => {
-    link.onclick = e => {
-      e.preventDefault();
-      document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-      document.getElementById(link.dataset.section).classList.add('active');
-      link.classList.add('active');
-    };
+    saveOrders(orders);
+    renderOrders();
+    e.target.reset();
   });
 
-  // ======= Utils =======
-  function showMessage(el, msg) {
-    el.textContent = msg;
-    setTimeout(() => el.textContent = '', 3000);
+  /* --- Функції для роботи із звітами --- */
+
+  // Функція генерації PDF звіту за допомогою jsPDF
+  function generatePdfReport(reportData) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFontSize(14);
+    doc.text('Звіт — Кількість замовлень по працівниках', 10, 10);
+
+    let y = 20;
+    reportData.forEach(item => {
+      doc.text(`${item.name}: ${item.orders}`, 10, y);
+      y += 10;
+    });
+    doc.save('report.pdf');
   }
 
-  // ======= Render All on Load =======
+  // Генерація звіту за замовленнями по співробітниках
+  elements.genReportBtn.addEventListener('click', () => {
+    /* 
+       Для прикладу використаємо дані з localStorage "employees".
+       Якщо employees відсутні, можна створити тестовий набір даних.
+       Наприклад, перевіримо: якщо data пуста — генеруємо тестові дані.
+    */
+    let employees = JSON.parse(localStorage.getItem('employees'));
+    if (!employees || employees.length === 0) {
+      employees = [
+        { id: "emp1", name: "Іваненко І.І." },
+        { id: "emp2", name: "Петренко П.П." },
+        { id: "emp3", name: "Сидоров С.С." }
+      ];
+      localStorage.setItem('employees', JSON.stringify(employees));
+    }
+    const orders = getOrders();
+
+    // Формуємо звіт: підрахунок замовлень для кожного співробітника (за employeeId)
+    const report = employees.map(emp => {
+      const count = orders.filter(o => o.employeeId === emp.id).length;
+      return { name: emp.name, orders: count };
+    });
+
+    // Вивід звіту в контейнері
+    elements.reportContainer.innerHTML = `
+      <table class="table table-bordered">
+        <thead>
+          <tr><th>Працівник</th><th>Замовлень</th></tr>
+        </thead>
+        <tbody>
+          ${report.map(item => `<tr><td>${item.name}</td><td>${item.orders}</td></tr>`).join('')}
+        </tbody>
+      </table>
+    `;
+
+    // Створення CSV рядка
+    const csvContent = [
+      ['Працівник', 'Замовлень'],
+      ...report.map(item => [item.name, item.orders])
+    ].map(row => row.join(',')).join('\n');
+
+    elements.reportContainer.dataset.csv = csvContent;
+    elements.reportContainer.dataset.json = JSON.stringify(report);
+
+    // Робимо кнопки експорту видимими
+    [elements.csvBtn, elements.pdfBtn, elements.excelBtn].forEach(btn => {
+      btn.style.display = 'inline-block';
+    });
+  });
+
+  // Експорт звіту у формат CSV
+  elements.csvBtn.addEventListener('click', () => {
+    const csv = elements.reportContainer.dataset.csv;
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'report.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  // Експорт звіту у формат PDF
+  elements.pdfBtn.addEventListener('click', () => {
+    const reportData = JSON.parse(elements.reportContainer.dataset.json);
+    generatePdfReport(reportData);
+  });
+
+  // Експорт звіту у формат Excel (XLSX) за допомогою SheetJS
+  elements.excelBtn.addEventListener('click', () => {
+    const reportData = JSON.parse(elements.reportContainer.dataset.json);
+    const ws = XLSX.utils.json_to_sheet(reportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Звіт');
+    XLSX.writeFile(wb, 'report.xlsx');
+  });
+
+  /* --- Навігація між секціями --- */
+  const navLinks = document.querySelectorAll('nav a[data-section]');
+  const tabSections = document.querySelectorAll('.tab-section');
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      navLinks.forEach(nav => nav.classList.remove('active'));
+      tabSections.forEach(sec => sec.classList.remove('active'));More actions
+
+      link.classList.add('active');
+      const sectionId = link.getAttribute('data-section');
+      document.getElementById(sectionId).classList.add('active');
+    });
+  });
+
+  // Початкове завантаження таблиці замовлень
   renderOrders();
   renderTransport();
-  renderEmployees();
+
 });
