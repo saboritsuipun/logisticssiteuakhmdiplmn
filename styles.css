@@ -1,4 +1,15 @@
+header .container > button {
+  font-size: 0;     /* прибирає видимий "+" */
+  width: 0;Add commentMore actions
+  padding: 0;
+  border: none;
+  display: none;
+}
 
+/* А так робимо непомітною саму кнопку */
+header .container > button::before {
+  content: none;
+}
 body {
   background-color: #111; /* Темний фон */
   color: #f0c419; /* Яскравий жовтий текст */
