@@ -237,3 +237,17 @@ document.addEventListener('DOMContentLoaded', () => {
     reportContainer.innerHTML = html;
   });
 });
+document.getElementById('searchBtn').addEventListener('click', () => {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  if (!q) return;
+
+  document.querySelectorAll('.tab-section').forEach(sec => sec.classList.remove('active'));
+  let found = false;
+  document.querySelectorAll('.tab-section').forEach(sec => {
+    if (sec.innerText.toLowerCase().includes(q)) {
+      sec.classList.add('active');
+      found = true;
+    }
+  });
+  if (!found) alert('⚠️ Нічого не знайдено!');
+});
