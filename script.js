@@ -172,3 +172,69 @@ window.addEventListener('DOMContentLoaded', () => {
   renderOrders();
 });
 
+// Генерація та експорт звіту: CSV / PDF / Excel
+document.addEventListener('DOMContentLoaded', () => {
+  const genBtn = document.getElementById('generate-report-btn');
+  const downloadCSV = document.getElementById('download-csv-btn');
+  const downloadPDF = document.getElementById('download-pdf-btn');
+  const downloadExcel = document.getElementById('download-excel-btn');
+  const container = document.getElementById('report-container');
+  let reportData = [];
+
+  genBtn?.addEventListener('click', () => {
+    const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+    const employees = JSON.parse(localStorage.getItem('employees') || '[]');
+
+    reportData = employees.map(emp => ({
+      name: emp.name,
+      orders: orders.filter(o => o.employeeId === emp.id).length
+    }));
+
+    container.innerHTML = `
+      <table class="table table-bordered">
+        <thead><tr><th>Працівник</th><th>Кількість замовлень</th></tr></thead>
+        <tbody>
+          ${reportData.map(r => `<tr><td>${r.name}</td><td>${r.orders}</td></tr>`).join('')}
+        </tbody>
+      </table>
+    `;
+
+    const csv = [['Працівник','Замовлень'], ...reportData.map(r => [r.name, r.orders])]
+      .map(r => r.join(',')).join('\n');
+
+    container.dataset.csv = csv;
+    container.dataset.json = JSON.stringify(reportData);
+
+    [downloadCSV, downloadPDF, downloadExcel].forEach(btn => btn.style.display = 'inline-block');
+  });
+
+  downloadCSV?.addEventListener('click', () => {
+    const blob = new Blob([container.dataset.csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'report.csv';
+    link.click();
+    URL.revokeObjectURL(link.href);
+  });
+
+  downloadPDF?.addEventListener('click', () => {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFontSize(14);
+    doc.text('Звіт — кількість замовлень по працівниках', 10, 10);
+    let y = 20;
+    JSON.parse(container.dataset.json).forEach(r => {
+      doc.text(`${r.name}: ${r.orders}`, 10, y);
+      y += 10;
+    });
+    doc.save('report.pdf');
+  });
+
+  downloadExcel?.addEventListener('click', () => {
+    const data = JSON.parse(container.dataset.json);
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Звіт');
+    XLSX.writeFile(wb, 'report.xlsx');
+  });
+});
