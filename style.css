@@ -1,0 +1,23 @@
+
+body {
+  background: #fff8dc;
+  color: #333;
+  font-family: "Segoe UI", sans-serif;
+}
+header, footer {
+  background-color: #222;
+  color: white;
+}
+.nav-link.active {
+  background-color: #ffc107;
+  border-radius: 4px;
+}
+.tab-section {
+  display: none;
+}
+.tab-section.active {
+  display: block;
+}
+button, .btn {
+  font-weight: 500;
+}
