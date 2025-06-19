@@ -1,5 +1,3 @@
-// Основний JavaScript для логістичної системи
-
 document.addEventListener("DOMContentLoaded", () => {
   setupNavigation();
   setupOrders();
@@ -9,214 +7,200 @@ document.addEventListener("DOMContentLoaded", () => {
   setupReports();
 });
 
+// Перемикання вкладок
 function setupNavigation() {
   document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', e => {
       e.preventDefault();
       const sectionId = link.getAttribute('data-section');
-
       document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
       document.getElementById(sectionId).classList.add('active');
-
       document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
       link.classList.add('active');
     });
   });
 }
 
+// === ЗАМОВЛЕННЯ ===
 function setupOrders() {
-  const orderForm = document.getElementById('orderForm');
-  const ordersTableBody = document.querySelector('#ordersTable tbody');
-  const orderMessage = document.getElementById('orderMessage');
+  const form = document.getElementById('orderForm');
+  const tableBody = document.querySelector('#ordersTable tbody');
+  const msg = document.getElementById('orderMessage');
 
-  function getOrders() {
-    return JSON.parse(localStorage.getItem('orders')) || [];
-  }
+  const getData = () => JSON.parse(localStorage.getItem('orders')) || [];
+  const saveData = data => localStorage.setItem('orders', JSON.stringify(data));
 
-  function saveOrders(orders) {
-    localStorage.setItem('orders', JSON.stringify(orders));
-  }
-
-  function renderOrders() {
-    ordersTableBody.innerHTML = '';
-    getOrders().forEach((order, index) => {
+  function render() {
+    tableBody.innerHTML = '';
+    getData().forEach((o, i) => {
       const row = document.createElement('tr');
       row.innerHTML = `
-        <td>${order.id}</td>
-        <td>${order.date}</td>
-        <td>${order.amount}</td>
-        <td>${order.status}</td>
+        <td>${o.id}</td><td>${o.date}</td><td>${o.amount}</td><td>${o.status}</td>
         <td>
-          <button class="btn btn-sm btn-warning" onclick="editOrder(${index})">Редагувати</button>
-          <button class="btn btn-sm btn-danger" onclick="deleteOrder(${index})">Видалити</button>
-        </td>
-      `;
-      ordersTableBody.appendChild(row);
+          <button type="button" class="btn btn-warning btn-sm" onclick="editOrder(${i})">Редагувати</button>
+          <button type="button" class="btn btn-danger btn-sm" onclick="deleteOrder(${i})">Видалити</button>
+        </td>`;
+      tableBody.appendChild(row);
     });
   }
 
-  window.editOrder = function(index) {
-    const orders = getOrders();
-    const order = orders[index];
-    document.getElementById('orderId').value = order.id;
-    document.getElementById('orderDate').value = order.date;
-    document.getElementById('orderAmount').value = order.amount;
-    document.getElementById('orderStatus').value = order.status;
-    orderForm.setAttribute('data-edit-index', index);
+  window.editOrder = i => {
+    const data = getData();
+    const o = data[i];
+    form.orderId.value = o.id;
+    form.orderDate.value = o.date;
+    form.orderAmount.value = o.amount;
+    form.orderStatus.value = o.status;
+    form.setAttribute('data-edit', i);
   };
 
-  window.deleteOrder = function(index) {
-    const orders = getOrders();
-    orders.splice(index, 1);
-    saveOrders(orders);
-    renderOrders();
+  window.deleteOrder = i => {
+    const data = getData();
+    data.splice(i, 1);
+    saveData(data);
+    render();
   };
 
-  orderForm.addEventListener('submit', e => {
+  form.addEventListener('submit', e => {
     e.preventDefault();
-    const orders = getOrders();
-    const id = document.getElementById('orderId').value;
-    const date = document.getElementById('orderDate').value;
-    const amount = document.getElementById('orderAmount').value;
-    const status = document.getElementById('orderStatus').value;
-
-    const newOrder = { id, date, amount, status };
-    const editIndex = orderForm.getAttribute('data-edit-index');
-
-    if (editIndex !== null) {
-      orders[editIndex] = newOrder;
-      orderForm.removeAttribute('data-edit-index');
+    const data = getData();
+    const obj = {
+      id: form.orderId.value,
+      date: form.orderDate.value,
+      amount: form.orderAmount.value,
+      status: form.orderStatus.value
+    };
+    const index = form.getAttribute('data-edit');
+    if (index !== null) {
+      data[index] = obj;
+      form.removeAttribute('data-edit');
     } else {
-      orders.push(newOrder);
+      data.push(obj);
     }
-
-    saveOrders(orders);
-    renderOrders();
-    orderForm.reset();
-    orderMessage.textContent = 'Замовлення збережено';
-    setTimeout(() => orderMessage.textContent = '', 2000);
+    saveData(data);
+    form.reset();
+    render();
+    msg.textContent = "Замовлення збережено";
+    setTimeout(() => msg.textContent = "", 2000);
   });
 
-  renderOrders();
+  render();
 }
 
+// === ТРАНСПОРТ ===
 function setupTransport() {
-  const transportForm = document.getElementById('transportForm');
-  const transportTableBody = document.querySelector('#transportTable tbody');
-  const transportMessage = document.getElementById('transportMessage');
+  const form = document.getElementById('transportForm');
+  const tableBody = document.querySelector('#transportTable tbody');
+  const msg = document.getElementById('transportMessage');
 
-  function getTransport() {
-    return JSON.parse(localStorage.getItem('transport')) || [];
-  }
+  const getData = () => JSON.parse(localStorage.getItem('transport')) || [];
+  const saveData = data => localStorage.setItem('transport', JSON.stringify(data));
 
-  function saveTransport(transport) {
-    localStorage.setItem('transport', JSON.stringify(transport));
-  }
-
-  function renderTransport() {
-    transportTableBody.innerHTML = '';
-    getTransport().forEach((vehicle, index) => {
+  function render() {
+    tableBody.innerHTML = '';
+    getData().forEach((v, i) => {
       const row = document.createElement('tr');
       row.innerHTML = `
-        <td>${vehicle.id}</td>
-        <td>${vehicle.brand}</td>
-        <td>${vehicle.model}</td>
-        <td>${vehicle.year}</td>
-        <td>${vehicle.number}</td>
+        <td>${v.id}</td><td>${v.brand}</td><td>${v.model}</td><td>${v.year}</td><td>${v.number}</td>
         <td>
-          <button class="btn btn-sm btn-warning" onclick="editVehicle(${index})">Редагувати</button>
-          <button class="btn btn-sm btn-danger" onclick="deleteVehicle(${index})">Видалити</button>
-        </td>
-      `;
-      transportTableBody.appendChild(row);
+          <button type="button" class="btn btn-warning btn-sm" onclick="editVehicle(${i})">Редагувати</button>
+          <button type="button" class="btn btn-danger btn-sm" onclick="deleteVehicle(${i})">Видалити</button>
+        </td>`;
+      tableBody.appendChild(row);
     });
   }
 
-  window.editVehicle = function(index) {
-    const vehicles = getTransport();
-    const vehicle = vehicles[index];
-    document.getElementById('vehicleId').value = vehicle.id;
-    document.getElementById('vehicleBrand').value = vehicle.brand;
-    document.getElementById('vehicleModel').value = vehicle.model;
-    document.getElementById('vehicleYear').value = vehicle.year;
-    document.getElementById('vehicleNumber').value = vehicle.number;
-    transportForm.setAttribute('data-edit-index', index);
+  window.editVehicle = i => {
+    const data = getData();
+    const v = data[i];
+    form.vehicleId.value = v.id;
+    form.vehicleBrand.value = v.brand;
+    form.vehicleModel.value = v.model;
+    form.vehicleYear.value = v.year;
+    form.vehicleNumber.value = v.number;
+    form.setAttribute('data-edit', i);
   };
 
-  window.deleteVehicle = function(index) {
-    const vehicles = getTransport();
-    vehicles.splice(index, 1);
-    saveTransport(vehicles);
-    renderTransport();
+  window.deleteVehicle = i => {
+    const data = getData();
+    data.splice(i, 1);
+    saveData(data);
+    render();
   };
 
-  transportForm.addEventListener('submit', e => {
+  form.addEventListener('submit', e => {
     e.preventDefault();
-    const vehicles = getTransport();
-    const id = document.getElementById('vehicleId').value;
-    const brand = document.getElementById('vehicleBrand').value;
-    const model = document.getElementById('vehicleModel').value;
-    const year = document.getElementById('vehicleYear').value;
-    const number = document.getElementById('vehicleNumber').value;
-
-    const newVehicle = { id, brand, model, year, number };
-    const editIndex = transportForm.getAttribute('data-edit-index');
-
-    if (editIndex !== null) {
-      vehicles[editIndex] = newVehicle;
-      transportForm.removeAttribute('data-edit-index');
+    const data = getData();
+    const obj = {
+      id: form.vehicleId.value,
+      brand: form.vehicleBrand.value,
+      model: form.vehicleModel.value,
+      year: form.vehicleYear.value,
+      number: form.vehicleNumber.value
+    };
+    const index = form.getAttribute('data-edit');
+    if (index !== null) {
+      data[index] = obj;
+      form.removeAttribute('data-edit');
     } else {
-      vehicles.push(newVehicle);
+      data.push(obj);
     }
-
-    saveTransport(vehicles);
-    renderTransport();
-    transportForm.reset();
-    transportMessage.textContent = 'Транспорт збережено';
-    setTimeout(() => transportMessage.textContent = '', 2000);
+    saveData(data);
+    form.reset();
+    render();
+    msg.textContent = "Транспорт збережено";
+    setTimeout(() => msg.textContent = "", 2000);
   });
 
-  renderTransport();
+  render();
 }
 
+// === ПРАЦІВНИКИ ===
 function setupEmployees() {
-  const employeeForm = document.getElementById('employeeForm');
-  employeeForm.addEventListener('submit', e => {
+  const form = document.getElementById('employeeForm');
+  const table = document.querySelector('#employeeTable tbody');
+
+  form.addEventListener('submit', e => {
     e.preventDefault();
-    alert('Працівника додано (лише візуально, без збереження)');
-    employeeForm.reset();
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>-${Date.now()}</td>
+      <td>${form.name.value}</td>
+      <td>${form.position.value}</td>
+      <td>${form.email.value}</td>
+      <td>${form.phone.value}</td>
+    `;
+    table.appendChild(row);
+    form.reset();
   });
 }
 
+// === ПОШУК ===
 function setupSearch() {
-  const search = document.createElement('input');
-  search.type = 'text';
-  search.placeholder = 'Пошук...';
-  search.className = 'form-control my-3';
-  document.querySelector('main').prepend(search);
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.placeholder = 'Пошук...';
+  input.className = 'form-control my-3 mx-3';
+  document.querySelector('main').prepend(input);
 
-  search.addEventListener('input', () => {
-    const value = search.value.toLowerCase();
+  input.addEventListener('input', () => {
+    const val = input.value.toLowerCase();
     ['ordersTable', 'transportTable', 'employeeTable'].forEach(id => {
-      const table = document.getElementById(id);
-      if (table) {
-        const rows = table.querySelectorAll('tbody tr');
-        rows.forEach(row => {
-          row.style.display = [...row.children].some(cell =>
-            cell.textContent.toLowerCase().includes(value)
-          ) ? '' : 'none';
-        });
-      }
+      const rows = document.querySelectorAll(`#${id} tbody tr`);
+      rows.forEach(row => {
+        const match = [...row.children].some(td => td.textContent.toLowerCase().includes(val));
+        row.style.display = match ? '' : 'none';
+      });
     });
   });
 }
 
+// === ЗВІТИ ===
 function setupReports() {
-  // Проста заглушка
   document.getElementById('generate-report-btn').addEventListener('click', () => {
-    document.getElementById('report-container').innerHTML = '<p>Звіт згенеровано (макет).</p>';
-    document.getElementById('download-csv-btn').style.display = 'inline-block';
-    document.getElementById('download-pdf-btn').style.display = 'inline-block';
-    document.getElementById('download-excel-btn').style.display = 'inline-block';
+    document.getElementById('report-container').innerHTML = '<p>Звіт згенеровано (демо).</p>';
+    ['csv', 'pdf', 'excel'].forEach(type =>
+      document.getElementById(`download-${type}-btn`).style.display = 'inline-block'
+    );
   });
 }
