@@ -1,5 +1,16 @@
 window.addEventListener('DOMContentLoaded', () => {
+  let editingOrderId = null;
+  let editingVehicleId = null;
+  let editingEmployeeId = null;
+
   const el = {
+    orderForm: document.getElementById('orderForm'),
+    orderMessage: document.getElementById('orderMessage'),
+    transportForm: document.getElementById('transportForm'),
+    transportMessage: document.getElementById('transportMessage'),
+    employeeForm: document.getElementById('employeeForm'),
+    employeeTableBody: document.querySelector('#employeeTable tbody'),
+    searchInput: document.getElementById('searchInput'),
     reportContainer: document.getElementById('report-container'),
     csvBtn: document.getElementById('download-csv-btn'),
     pdfBtn: document.getElementById('download-pdf-btn'),
@@ -9,6 +20,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
   function getStorage(key) {
     return JSON.parse(localStorage.getItem(key) || '[]');
+  }
+
+  function setStorage(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
   }
 
   function generateReport() {
@@ -32,7 +47,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     el.reportContainer.innerHTML = tableHtml;
     el.reportContainer.dataset.json = JSON.stringify(report);
-    el.reportContainer.dataset.csv = [['Працівник', 'Замовлень', 'Транспорт'], ...report.map(r => [r.name, r.orders, r.transport])].map(row => row.join(',')).join('\n');
+    el.reportContainer.dataset.csv = [['Працівник','Замовлень','Транспорт'], ...report.map(r => [r.name, r.orders, r.transport])].map(row => row.join(',')).join('\n');
 
     [el.csvBtn, el.pdfBtn, el.excelBtn].forEach(btn => btn.classList.remove("d-none"));
   }
