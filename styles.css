@@ -1,9 +1,5 @@
-/* Ховаємо кнопки з текстом "+" в header */
 header .container > button {
-  font-size: 0;     /* прибирає видимий "+" */
-  width: 0;
-  padding: 0;
-  border: none;
+  display: none;
 }
 
 /* А так робимо непомітною саму кнопку */
