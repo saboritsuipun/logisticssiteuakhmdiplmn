@@ -1,27 +1,22 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Система логістики</title>
   <!-- Підключення Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Підключення зовнішнього файлу стилів -->
-  <link rel="stylesheet" href="style.css">
   <!-- Підключення jsPDF та SheetJS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
   <style>
-    /* Додаткові стилі для секцій (якщо потрібно) */
-    .tab-section {
-      display: none;
-    }
-    .tab-section.active {
-      display: block;
-    }
+     <link rel="stylesheet" href="style.css">
+    /* Стилі для навігації та секцій */
+    .tab-section { display: none; }
+    .tab-section.active { display: block; }
   </style>
 </head>
-  <link rel="stylesheet" href="style.css">
 <body>
   <!-- Header -->
   <header class="bg-dark text-white p-3">
@@ -121,54 +116,10 @@
       </form>
     </section>
     
-    <!-- Транспорт (Система управління водіями) -->
+    <!-- Транспорт -->
     <section id="transport" class="tab-section">
       <h2>Транспорт</h2>
-      <p>Система для управління водіями та транспортними засобами. Ви можете додавати, редагувати та видаляти водіїв.</p>
-      <!-- Таблиця водіїв -->
-      <table class="table table-bordered" id="transportTable">
-        <thead>
-          <tr>
-            <th>ID Водія</th>
-            <th>Ім'я водія</th>
-            <th>Номер ТЗ</th>
-            <th>Статус</th>
-            <th>Дії</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Дані водіїв завантажуватимуться динамічно -->
-        </tbody>
-      </table>
-      <hr>
-      <!-- Форма для додавання/редагування водія -->
-      <h3 id="transportFormTitle">Додати водія</h3>
-      <form id="transportForm" class="row g-3">
-        <div class="col-md-3">
-          <label class="form-label">ID Водія</label>
-          <input type="text" id="driverId" class="form-control" required>
-        </div>
-        <div class="col-md-3">
-          <label class="form-label">Ім'я водія</label>
-          <input type="text" id="driverName" class="form-control" required>
-        </div>
-        <div class="col-md-3">
-          <label class="form-label">Номер ТЗ</label>
-          <input type="text" id="vehicleNumber" class="form-control" placeholder="Наприклад, ABC-123" required>
-        </div>
-        <div class="col-md-3">
-          <label class="form-label">Статус</label>
-          <select id="driverStatus" class="form-select" required>
-            <option value="">Виберіть статус</option>
-            <option value="Активний">Активний</option>
-            <option value="Неактивний">Неактивний</option>
-          </select>
-        </div>
-        <div class="col-12">
-          <button type="submit" class="btn btn-primary">Зберегти водія</button>
-          <p id="transportMessage" class="mt-2 text-success"></p>
-        </div>
-      </form>
+      <p>Інформація про транспортні засоби та водіїв.</p>
     </section>
     
     <!-- Працівники -->
@@ -253,7 +204,7 @@
   <!-- Основний JavaScript -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      /* --- Управління замовленнями (Orders) --- */
+      /* --- Управління замовленнями --- */
       let editingOrderId = null;
       const elements = {
         orderForm: document.getElementById('orderForm'),
@@ -265,5 +216,196 @@
         excelBtn: document.getElementById('download-excel-btn'),
         genReportBtn: document.getElementById('generate-report-btn')
       };
+      
+      // Отримання та збереження замовлень у localStorage
+      function getOrders() {
+        return JSON.parse(localStorage.getItem('orders')) || [];
+      }
+      function saveOrders(orders) {
+        localStorage.setItem('orders', JSON.stringify(orders));
+      }
+      
+      // Відмалювання таблиці замовлень
+      function renderOrders() {
+        const orders = getOrders();
+        elements.ordersTableBody.innerHTML = '';
+        if (orders.length === 0) {
+          const row = document.createElement('tr');
+          row.innerHTML = `<td colspan="5" class="text-center fst-italic">Замовлень немає</td>`;
+          elements.ordersTableBody.appendChild(row);
+          return;
+        }
+        orders.forEach(order => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${order.id}</td>
+            <td>${order.date}</td>
+            <td>${parseFloat(order.amount).toFixed(2)}</td>
+            <td>${order.status}</td>
+            <td>
+              <button class="edit-btn btn btn-sm btn-warning">Редагувати</button>
+              <button class="delete-btn btn btn-sm btn-danger">Видалити</button>
+            </td>
+          `;
+          elements.ordersTableBody.appendChild(row);
+          // Редагування замовлення
+          row.querySelector('.edit-btn').addEventListener('click', () => {
+            document.getElementById('orderId').value = order.id;
+            document.getElementById('orderDate').value = order.date;
+            document.getElementById('orderAmount').value = order.amount;
+            document.getElementById('orderStatus').value = order.status;
+            editingOrderId = order.id;
+            elements.orderMessage.textContent = 'Редагування замовлення...';
+          });
+          // Видалення замовлення
+          row.querySelector('.delete-btn').addEventListener('click', () => {
+            if (confirm('Ви дійсно хочете видалити це замовлення?')) {
+              let ordersUpdated = getOrders().filter(o => o.id !== order.id);
+              saveOrders(ordersUpdated);
+              renderOrders();
+              elements.orderMessage.textContent = 'Замовлення видалено!';
+              if (editingOrderId === order.id) {
+                editingOrderId = null;
+                elements.orderForm.reset();
+              }
+            }
+          });
+        });
+      }
+      
+      // Обробка форми додавання/редагування замовлення
+      elements.orderForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const orderData = {
+          id: document.getElementById('orderId').value.trim(),
+          date: document.getElementById('orderDate').value,
+          amount: document.getElementById('orderAmount').value,
+          status: document.getElementById('orderStatus').value
+        };
+        if (!orderData.id || !orderData.date || !orderData.amount || !orderData.status) {
+          alert('Будь ласка, заповніть усі поля замовлення.');
+          return;
+        }
+        let orders = getOrders();
+        if(editingOrderId) {
+          if(editingOrderId !== orderData.id && orders.some(o => o.id === orderData.id)) {
+            alert('Замовлення з таким ID вже існує!');
+            return;
+          }
+          orders = orders.map(o => o.id === editingOrderId ? orderData : o);
+          elements.orderMessage.textContent = 'Замовлення оновлено!';
+          editingOrderId = null;
+        } else {
+          if(orders.some(o => o.id === orderData.id)) {
+            alert('Замовлення з таким ID вже існує!');
+            return;
+          }
+          orders.push(orderData);
+          elements.orderMessage.textContent = 'Замовлення додано!';
+        }
+        saveOrders(orders);
+        renderOrders();
+        e.target.reset();
+      });
+      
+      /* --- Генерація звітів --- */
+      function generatePdfReport(reportData) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.setFontSize(14);
+        doc.text('Звіт — Кількість замовлень по працівниках', 10, 10);
+        let y = 20;
+        reportData.forEach(item => {
+          doc.text(`${item.name}: ${item.orders}`, 10, y);
+          y += 10;
+        });
+        doc.save('report.pdf');
+      }
+      
+      elements.genReportBtn.addEventListener('click', () => {
+        // Якщо у localStorage немає даних про співробітників, створюємо тестовий набір
+        let employees = JSON.parse(localStorage.getItem('employees'));
+        if (!employees || employees.length === 0) {
+          employees = [
+            { id: "emp1", name: "Іваненко І.І." },
+            { id: "emp2", name: "Петренко П.П." },
+            { id: "emp3", name: "Сидоров С.С." }
+          ];
+          localStorage.setItem('employees', JSON.stringify(employees));
+        }
+        const orders = getOrders();
+        const report = employees.map(emp => {
+          const count = orders.filter(o => o.employeeId === emp.id).length;
+          return { name: emp.name, orders: count };
+        });
+        elements.reportContainer.innerHTML = `
+          <table class="table table-bordered">
+            <thead>
+              <tr><th>Працівник</th><th>Замовлень</th></tr>
+            </thead>
+            <tbody>
+              ${report.map(item => `<tr><td>${item.name}</td><td>${item.orders}</td></tr>`).join('')}
+            </tbody>
+          </table>
+        `;
+        // Формуємо CSV
+        const csvContent = [
+          ['Працівник', 'Замовлень'],
+          ...report.map(item => [item.name, item.orders])
+        ].map(row => row.join(',')).join('\n');
+        elements.reportContainer.dataset.csv = csvContent;
+        elements.reportContainer.dataset.json = JSON.stringify(report);
+        [elements.csvBtn, elements.pdfBtn, elements.excelBtn].forEach(btn => {
+          btn.style.display = 'inline-block';
+        });
+      });
+      
+      // Експорт CSV-звіту
+      elements.csvBtn.addEventListener('click', () => {
+        const csv = elements.reportContainer.dataset.csv;
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'report.csv';
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+      
+      // Експорт PDF-звіту
+      elements.pdfBtn.addEventListener('click', () => {
+        const reportData = JSON.parse(elements.reportContainer.dataset.json);
+        generatePdfReport(reportData);
+      });
+      
+      // Експорт Excel-звіту
+      elements.excelBtn.addEventListener('click', () => {
+        const reportData = JSON.parse(elements.reportContainer.dataset.json);
+        const ws = XLSX.utils.json_to_sheet(reportData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Звіт');
+        XLSX.writeFile(wb, 'report.xlsx');
+      });
+      
+      /* --- Навігація між секціями --- */
+      const navLinks = document.querySelectorAll('nav a[data-section]');
+      const tabSections = document.querySelectorAll('.tab-section');
+      navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          navLinks.forEach(nav => nav.classList.remove('active'));
+          tabSections.forEach(sec => sec.classList.remove('active'));
+          link.classList.add('active');
+          const sectionId = link.getAttribute('data-section');
+          document.getElementById(sectionId).classList.add('active');
+        });
+      });
+      
+      // Початкове відображення замовлень
+      renderOrders();
+    });
+  </script>
+</body>
+</html>
 
      
