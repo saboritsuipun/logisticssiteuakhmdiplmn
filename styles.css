@@ -117,8 +117,25 @@ input::placeholder, textarea::placeholder {
   display: block;
 }
 
-#orderMessage, #transportMessage {
+#orderMessage, #transportMessage, #employeeMessage {
   font-weight: bold;
   color: #00ff00;
 }
 
+#searchInput {
+  margin: 10px 0;
+  background-color: #000;
+  color: #f2c200;
+  border: 1px solid #f2c200;
+  padding: 5px 10px;
+}
+
+#searchInput::placeholder {
+  color: #888;
+}
+
+.search-container {
+  display: flex;
+  justify-content: end;
+  margin-bottom: 1rem;
+}
