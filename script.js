@@ -1,7 +1,7 @@
-// Основний скрипт для сайту логістики
+
 
 window.addEventListener('DOMContentLoaded', () => {
-  // === ЗМІННІ ===
+
   let editingOrderId = null;
   let editingVehicleId = null;
 
@@ -18,7 +18,7 @@ window.addEventListener('DOMContentLoaded', () => {
     genReportBtn: document.getElementById('generate-report-btn')
   };
 
-  // === ФУНКЦІЇ ===
+
   function getStorage(key) {
     return JSON.parse(localStorage.getItem(key)) || [];
   }
