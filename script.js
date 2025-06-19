@@ -159,6 +159,21 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   function setupNavigation() {
+      function addTableSearch(inputId, tableSelector) {
+    const input = document.getElementById(inputId);
+    const table = document.querySelector(tableSelector);
+    if (!input || !table) return;
+
+    input.addEventListener('input', () => {
+      const filter = input.value.toLowerCase();
+      const rows = table.querySelectorAll('tbody tr');
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+      });
+    });
+  }
+
     const links = document.querySelectorAll('[data-section]');
     const sections = document.querySelectorAll('.tab-section');
     links.forEach(link => {
@@ -174,23 +189,25 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   function setupSearch() {
-    const searchInput = document.createElement('input');
-    searchInput.placeholder = 'Пошук...';
-    searchInput.className = 'form-control w-25 ms-3';
-    document.querySelector('header .container').appendChild(searchInput);
+    const container = document.querySelector('header .container');
 
-    searchInput.addEventListener('input', () => {
-      const q = searchInput.value.toLowerCase();
-      ['ordersTable', 'transportTable', 'employeeTable'].forEach(id => {
-        const table = document.getElementById(id);
-        if (!table) return;
-        table.querySelectorAll('tbody tr').forEach(row => {
-          const txt = row.textContent.toLowerCase();
-          row.style.display = txt.includes(q) ? '' : 'none';
-        });
-      });
+    const searchConfigs = [
+      { id: 'searchOrders', placeholder: 'Пошук замовлень...', table: '#ordersTable' },
+      { id: 'searchTransport', placeholder: 'Пошук транспорту...', table: '#transportTable' },
+      { id: 'searchEmployees', placeholder: 'Пошук працівників...', table: '#employeeTable' }
+    ];
+
+    searchConfigs.forEach(cfg => {
+      const input = document.createElement('input');
+      input.id = cfg.id;
+      input.placeholder = cfg.placeholder;
+      input.className = 'form-control w-25 my-2';
+      container.appendChild(input);
+      // Запускаємо фільтр для відповідної таблиці
+      setTimeout(() => addTableSearch(cfg.id, cfg.table), 0);
     });
   }
+
 
   renderOrders();
   renderTransport();
