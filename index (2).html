@@ -1,0 +1,132 @@
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Система логістики</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Користувацькі стилі -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Бібліотеки для експорту -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+</head>
+<body>
+  <header class="p-3 bg-dark text-white">
+    <div class="container d-flex justify-content-between align-items-center">
+      <h1 class="h4 m-0">Система управління логістикою</h1>
+      <nav>
+        <ul class="nav">
+          <li class="nav-item"><a class="nav-link text-white active" href="#" data-section="home">Головна</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="#" data-section="orders">Замовлення</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="#" data-section="transport">Транспорт</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="#" data-section="employees">Працівники</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="#" data-section="reports">Звіти</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="#" data-section="contact">Контакти</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container-fluid p-0">
+    <section id="home" class="tab-section active text-white text-center">
+      <div class="bg-overlay">
+        <h2>Головна</h2>
+        <p>Ласкаво просимо до системи управління логістикою.</p>
+        <ul class="list-unstyled">
+          <li>Перегляд і додавання замовлень</li>
+          <li>Контроль транспорту</li>
+          <li>Керування працівниками</li>
+          <li>Створення звітів</li>
+          <li>Зворотній зв’язок</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="orders" class="tab-section">
+      <h2>Замовлення</h2>
+      <table class="table table-bordered" id="ordersTable">
+        <thead><tr><th>ID</th><th>Дата</th><th>Сума</th><th>Статус</th><th>Дії</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <form id="orderForm" class="row g-3">
+        <div class="col-md-4"><input type="text" id="orderId" class="form-control" placeholder="ID" required /></div>
+        <div class="col-md-4"><input type="date" id="orderDate" class="form-control" required /></div>
+        <div class="col-md-4"><input type="text" id="orderAmount" class="form-control" placeholder="Сума" required /></div>
+        <div class="col-md-4">
+          <select id="orderStatus" class="form-select" required>
+            <option value="">Статус</option>
+            <option value="Оброблено">Оброблено</option>
+            <option value="В очікуванні">В очікуванні</option>
+            <option value="Скасовано">Скасовано</option>
+          </select>
+        </div>
+        <div class="col-12">
+          <button class="btn btn-primary" type="submit">Зберегти</button>
+          <p id="orderMessage" class="mt-2"></p>
+        </div>
+      </form>
+    </section>
+
+    <section id="transport" class="tab-section">
+      <h2>Транспорт</h2>
+      <table class="table table-bordered" id="transportTable">
+        <thead><tr><th>ID</th><th>Марка</th><th>Модель</th><th>Рік</th><th>Номер</th><th>Дії</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <form id="transportForm" class="row g-3">
+        <div class="col-md-4"><input type="text" id="vehicleId" class="form-control" placeholder="ID" required /></div>
+        <div class="col-md-4"><input type="text" id="vehicleBrand" class="form-control" placeholder="Марка" required /></div>
+        <div class="col-md-4"><input type="text" id="vehicleModel" class="form-control" placeholder="Модель" required /></div>
+        <div class="col-md-4"><input type="number" id="vehicleYear" class="form-control" placeholder="Рік" required /></div>
+        <div class="col-md-4"><input type="text" id="vehicleNumber" class="form-control" placeholder="Номер" required /></div>
+        <div class="col-12">
+          <button class="btn btn-primary" type="submit">Зберегти</button>
+          <p id="transportMessage" class="mt-2"></p>
+        </div>
+      </form>
+    </section>
+
+    <section id="employees" class="tab-section">
+      <h2>Працівники</h2>
+      <table class="table table-bordered" id="employeeTable">
+        <thead><tr><th>ID</th><th>ПІБ</th><th>Посада</th><th>Email</th><th>Телефон</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <form id="employeeForm" class="row g-3">
+        <div class="col-md-6"><input type="text" id="name" class="form-control" placeholder="ПІБ" required /></div>
+        <div class="col-md-6"><input type="text" id="position" class="form-control" placeholder="Посада" required /></div>
+        <div class="col-md-6"><input type="email" id="email" class="form-control" placeholder="Email" required /></div>
+        <div class="col-md-6"><input type="tel" id="phone" class="form-control" placeholder="Телефон" required /></div>
+        <div class="col-12"><button class="btn btn-primary" type="submit">Додати</button></div>
+      </form>
+    </section>
+
+    <section id="reports" class="tab-section">
+      <h2>Звіти</h2>
+      <button id="generate-report-btn" class="btn btn-primary mb-2">Згенерувати звіт</button>
+      <button id="download-csv-btn" class="btn btn-secondary" style="display:none;">CSV</button>
+      <button id="download-pdf-btn" class="btn btn-secondary" style="display:none;">PDF</button>
+      <button id="download-excel-btn" class="btn btn-secondary" style="display:none;">Excel</button>
+      <div id="report-container" class="table-responsive mt-3"></div>
+    </section>
+
+    <section id="contact" class="tab-section">
+      <h2>Контакти</h2>
+      <p>Email: support@logistikasystem.ua<br>Телефон: +380501234567</p>
+    </section>
+  </main>
+
+  <footer class="bg-dark text-white text-center py-3">
+    <p class="mb-0">&copy; 2025 ЛогістикаSoft</p>
+  </footer>
+
+  <!-- Основний скрипт -->
+  <script src="script.js"></script>
+</body>
+</html>
