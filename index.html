@@ -116,11 +116,168 @@
       </form>
     </section>
     
-    <!-- Транспорт -->
-    <section id="transport" class="tab-section">
-      <h2>Транспорт</h2>
-      <p>Інформація про транспортні засоби та водіїв.</p>
-    </section>
+ <!-- Транспорт -->
+<section id="transport" class="tab-section">
+  <h2>Транспорт</h2>
+  <p>Інформація про транспортні засоби та водіїв.</p>
+
+  <!-- Таблиця -->
+  <table class="table table-bordered" id="transportTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Марка</th>
+        <th>Модель</th>
+        <th>Рік</th>
+        <th>Номер</th>
+        <th>Дії</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Дані додаються через JS -->
+    </tbody>
+  </table>
+
+  <!-- Форма -->
+  <h3>Додати/Редагувати транспорт</h3>
+  <form id="transportForm" class="row g-3">
+    <div class="col-md-4">
+      <label for="vehicleId" class="form-label">ID ТЗ</label>
+      <input type="text" id="vehicleId" class="form-control" required>
+    </div>
+    <div class="col-md-4">
+      <label for="vehicleBrand" class="form-label">Марка</label>
+      <input type="text" id="vehicleBrand" class="form-control" required>
+    </div>
+    <div class="col-md-4">
+      <label for="vehicleModel" class="form-label">Модель</label>
+      <input type="text" id="vehicleModel" class="form-control" required>
+    </div>
+    <div class="col-md-4">
+      <label for="vehicleYear" class="form-label">Рік випуску</label>
+      <input type="number" id="vehicleYear" class="form-control" required>
+    </div>
+    <div class="col-md-4">
+      <label for="vehicleNumber" class="form-label">Номерний знак</label>
+      <input type="text" id="vehicleNumber" class="form-control" required>
+    </div>
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Зберегти</button>
+      <p id="transportMessage" class="mt-2 text-success"></p>
+    </div>
+  </form>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    let editingVehicleId = null;
+
+    const transportElements = {
+      form: document.getElementById('transportForm'),
+      message: document.getElementById('transportMessage'),
+      tableBody: document.querySelector('#transportTable tbody')
+    };
+
+    function getTransportList() {
+      return JSON.parse(localStorage.getItem('transport')) || [];
+    }
+
+    function saveTransportList(data) {
+      localStorage.setItem('transport', JSON.stringify(data));
+    }
+
+    function renderTransport() {
+      const transportList = getTransportList();
+      transportElements.tableBody.innerHTML = '';
+
+      if (transportList.length === 0) {
+        transportElements.tableBody.innerHTML =
+          `<tr><td colspan="6" class="text-center fst-italic">Немає транспортних засобів</td></tr>`;
+        return;
+      }
+
+      transportList.forEach(vehicle => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${vehicle.id}</td>
+          <td>${vehicle.brand}</td>
+          <td>${vehicle.model}</td>
+          <td>${vehicle.year}</td>
+          <td>${vehicle.number}</td>
+          <td>
+            <button class="btn btn-sm btn-warning edit-vehicle">Редагувати</button>
+            <button class="btn btn-sm btn-danger delete-vehicle">Видалити</button>
+          </td>
+        `;
+        transportElements.tableBody.appendChild(row);
+
+        // Редагування
+        row.querySelector('.edit-vehicle').addEventListener('click', () => {
+          document.getElementById('vehicleId').value = vehicle.id;
+          document.getElementById('vehicleBrand').value = vehicle.brand;
+          document.getElementById('vehicleModel').value = vehicle.model;
+          document.getElementById('vehicleYear').value = vehicle.year;
+          document.getElementById('vehicleNumber').value = vehicle.number;
+          editingVehicleId = vehicle.id;
+          transportElements.message.textContent = 'Редагування транспорту...';
+        });
+
+        // Видалення
+        row.querySelector('.delete-vehicle').addEventListener('click', () => {
+          if (confirm('Ви дійсно хочете видалити цей транспорт?')) {
+            const updatedList = getTransportList().filter(v => v.id !== vehicle.id);
+            saveTransportList(updatedList);
+            renderTransport();
+            transportElements.message.textContent = 'Транспорт видалено!';
+            if (editingVehicleId === vehicle.id) {
+              editingVehicleId = null;
+              transportElements.form.reset();
+            }
+          }
+        });
+      });
+    }
+
+    // Обробка форми
+    transportElements.form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const vehicle = {
+        id: document.getElementById('vehicleId').value.trim(),
+        brand: document.getElementById('vehicleBrand').value.trim(),
+        model: document.getElementById('vehicleModel').value.trim(),
+        year: document.getElementById('vehicleYear').value.trim(),
+        number: document.getElementById('vehicleNumber').value.trim()
+      };
+
+      if (!vehicle.id || !vehicle.brand || !vehicle.model || !vehicle.year || !vehicle.number) {
+        alert('Будь ласка, заповніть усі поля транспорту.');
+        return;
+      }
+
+      let transportList = getTransportList();
+
+      if (editingVehicleId) {
+        transportList = transportList.map(v => v.id === editingVehicleId ? vehicle : v);
+        transportElements.message.textContent = 'Дані транспорту оновлено!';
+        editingVehicleId = null;
+      } else {
+        if (transportList.some(v => v.id === vehicle.id)) {
+          alert('Транспорт з таким ID вже існує!');
+          return;
+        }
+        transportList.push(vehicle);
+        transportElements.message.textContent = 'Транспорт додано!';
+      }
+
+      saveTransportList(transportList);
+      renderTransport();
+      transportElements.form.reset();
+    });
+
+    renderTransport();
+  });
+</script>
+
     
     <!-- Працівники -->
     <section id="employees" class="tab-section">
