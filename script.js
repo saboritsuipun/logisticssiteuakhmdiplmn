@@ -29,22 +29,25 @@ window.addEventListener('DOMContentLoaded', () => {
   function generateReport() {
     const employees = getStorage('employees');
     const orders = getStorage('orders');
+    const transport = getStorage('transport');
+
     const report = employees.map(emp => {
-      const count = orders.filter(o => o.employeeId === emp.id).length;
-      return { name: emp.name, orders: count };
+      const orderCount = orders.filter(o => o.employeeId === emp.id).length;
+      const transportCount = transport.filter(t => t.employeeId === emp.id).length;
+      return { name: emp.name, orders: orderCount, transport: transportCount };
     });
 
     const tableHtml = `
       <table class="table table-bordered">
-        <thead><tr><th>Працівник</th><th>Кількість замовлень</th></tr></thead>
+        <thead><tr><th>Працівник</th><th>Замовлень</th><th>Транспорт</th></tr></thead>
         <tbody>
-          ${report.map(r => `<tr><td>${r.name}</td><td>${r.orders}</td></tr>`).join('')}
+          ${report.map(r => `<tr><td>${r.name}</td><td>${r.orders}</td><td>${r.transport}</td></tr>`).join('')}
         </tbody>
       </table>`;
 
     el.reportContainer.innerHTML = tableHtml;
     el.reportContainer.dataset.json = JSON.stringify(report);
-    el.reportContainer.dataset.csv = [['Працівник','Кількість замовлень'], ...report.map(r => [r.name, r.orders])].map(row => row.join(',')).join('\n');
+    el.reportContainer.dataset.csv = [['Працівник','Замовлень','Транспорт'], ...report.map(r => [r.name, r.orders, r.transport])].map(row => row.join(',')).join('\n');
 
     [el.csvBtn, el.pdfBtn, el.excelBtn].forEach(btn => btn.classList.remove("d-none"));
   }
@@ -66,10 +69,10 @@ window.addEventListener('DOMContentLoaded', () => {
     const report = JSON.parse(el.reportContainer.dataset.json || "[]");
     const doc = new jsPDF();
     doc.setFontSize(14);
-    doc.text("Звіт — Кількість замовлень по працівниках", 10, 10);
+    doc.text("Звіт — Замовлення та транспорт по працівниках", 10, 10);
     let y = 20;
     report.forEach(r => {
-      doc.text(`${r.name}: ${r.orders}`, 10, y);
+      doc.text(`${r.name}: Замовлень — ${r.orders}, Транспорт — ${r.transport}`, 10, y);
       y += 10;
     });
     doc.save("report.pdf");
