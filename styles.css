@@ -1,10 +1,46 @@
 
-body { background-color: #111; color: #f2c200; font-family: Arial, sans-serif; }
-header, footer { background-color: #000; color: #f2c200; }
-.tab-section { display: none; }
-.tab-section.active { display: block; }
-.nav-link.active { font-weight: bold; border-bottom: 2px solid #f2c200; }
-.table th { background-color: #f2c200; color: #000; }
-.table td { background-color: #222; color: #f2c200; }
-input, select { background-color: #000; color: #f2c200; border: 1px solid #f2c200; }
-input:focus, select:focus { outline: none; box-shadow: 0 0 5px #ffd700; }
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+h2 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+table {
+  background-color: #fff;
+}
+
+th {
+  background-color: #343a40;
+  color: #fff;
+  text-align: center;
+}
+
+td, th {
+  vertical-align: middle;
+}
+
+.btn {
+  min-width: 100px;
+}
+
+form .form-label {
+  font-weight: bold;
+}
+
+#orderMessage, #transportMessage {
+  font-weight: bold;
+  color: green;
+}
+
+footer {
+  margin-top: 2rem;
+  background-color: #f1f1f1;
+  padding: 10px 0;
+  font-size: 14px;
+}
