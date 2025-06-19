@@ -1,84 +1,222 @@
-document.querySelectorAll('[data-section]').forEach(link => {
-  link.addEventListener('click', e => {
-    e.preventDefault();
-    const section = link.getAttribute('data-section');
-    document.querySelectorAll('.tab-section').forEach(sec => sec.classList.remove('active'));
-    document.querySelector(`#${section}`)?.classList.add('active');
+// Основний JavaScript для логістичної системи
 
-    document.querySelectorAll('.nav-link').forEach(nav => nav.classList.remove('active', 'text-warning'));
-    link.classList.add('active', 'text-warning');
-  });
+document.addEventListener("DOMContentLoaded", () => {
+  setupNavigation();
+  setupOrders();
+  setupTransport();
+  setupEmployees();
+  setupSearch();
+  setupReports();
 });
 
-window.addEventListener('DOMContentLoaded', () => {
-  const el = {
-    reportContainer: document.getElementById('report-container'),
-    csvBtn: document.getElementById('download-csv-btn'),
-    pdfBtn: document.getElementById('download-pdf-btn'),
-    excelBtn: document.getElementById('download-excel-btn'),
-    genReportBtn: document.getElementById('generate-report-btn')
-  };
+function setupNavigation() {
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const sectionId = link.getAttribute('data-section');
 
-  function getStorage(key) {
-    return JSON.parse(localStorage.getItem(key) || '[]');
+      document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+      document.getElementById(sectionId).classList.add('active');
+
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+    });
+  });
+}
+
+function setupOrders() {
+  const orderForm = document.getElementById('orderForm');
+  const ordersTableBody = document.querySelector('#ordersTable tbody');
+  const orderMessage = document.getElementById('orderMessage');
+
+  function getOrders() {
+    return JSON.parse(localStorage.getItem('orders')) || [];
   }
 
-  el.genReportBtn?.addEventListener('click', () => {
-    const employees = getStorage('employees');
-    const orders = getStorage('orders');
-    const transport = getStorage('transport');
+  function saveOrders(orders) {
+    localStorage.setItem('orders', JSON.stringify(orders));
+  }
 
-    const report = employees.map(emp => {
-      const orderCount = orders.filter(o => o.employeeId === emp.id).length;
-      const transportCount = transport.filter(t => t.employeeId === emp.id).length;
-      return { name: emp.name, orders: orderCount, transport: transportCount };
+  function renderOrders() {
+    ordersTableBody.innerHTML = '';
+    getOrders().forEach((order, index) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${order.id}</td>
+        <td>${order.date}</td>
+        <td>${order.amount}</td>
+        <td>${order.status}</td>
+        <td>
+          <button class="btn btn-sm btn-warning" onclick="editOrder(${index})">Редагувати</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteOrder(${index})">Видалити</button>
+        </td>
+      `;
+      ordersTableBody.appendChild(row);
     });
+  }
 
-    const tableHtml = `
-      <table class="table table-bordered">
-        <thead><tr><th>Працівник</th><th>Замовлень</th><th>Транспорт</th></tr></thead>
-        <tbody>
-          ${report.map(r => `<tr><td>${r.name}</td><td>${r.orders}</td><td>${r.transport}</td></tr>`).join('')}
-        </tbody>
-      </table>`;
+  window.editOrder = function(index) {
+    const orders = getOrders();
+    const order = orders[index];
+    document.getElementById('orderId').value = order.id;
+    document.getElementById('orderDate').value = order.date;
+    document.getElementById('orderAmount').value = order.amount;
+    document.getElementById('orderStatus').value = order.status;
+    orderForm.setAttribute('data-edit-index', index);
+  };
 
-    el.reportContainer.innerHTML = tableHtml;
-    el.reportContainer.dataset.json = JSON.stringify(report);
-    el.reportContainer.dataset.csv = [['Працівник','Замовлень','Транспорт'], ...report.map(r => [r.name, r.orders, r.transport])].map(row => row.join(',')).join('\n');
+  window.deleteOrder = function(index) {
+    const orders = getOrders();
+    orders.splice(index, 1);
+    saveOrders(orders);
+    renderOrders();
+  };
 
-    [el.csvBtn, el.pdfBtn, el.excelBtn].forEach(btn => btn.classList.remove('d-none'));
+  orderForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const orders = getOrders();
+    const id = document.getElementById('orderId').value;
+    const date = document.getElementById('orderDate').value;
+    const amount = document.getElementById('orderAmount').value;
+    const status = document.getElementById('orderStatus').value;
+
+    const newOrder = { id, date, amount, status };
+    const editIndex = orderForm.getAttribute('data-edit-index');
+
+    if (editIndex !== null) {
+      orders[editIndex] = newOrder;
+      orderForm.removeAttribute('data-edit-index');
+    } else {
+      orders.push(newOrder);
+    }
+
+    saveOrders(orders);
+    renderOrders();
+    orderForm.reset();
+    orderMessage.textContent = 'Замовлення збережено';
+    setTimeout(() => orderMessage.textContent = '', 2000);
   });
 
-  el.csvBtn?.addEventListener('click', () => {
-    const csv = el.reportContainer.dataset.csv;
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'report.csv';
-    a.click();
-    URL.revokeObjectURL(a.href);
-  });
+  renderOrders();
+}
 
-  el.pdfBtn?.addEventListener('click', () => {
-    const { jsPDF } = window.jspdf;
-    const report = JSON.parse(el.reportContainer.dataset.json || '[]');
-    const doc = new jsPDF();
-    doc.setFontSize(14);
-    doc.text('Звіт — Замовлення та транспорт по працівниках', 10, 10);
-    let y = 20;
-    report.forEach(r => {
-      doc.text(`${r.name}: Замовлень — ${r.orders}, Транспорт — ${r.transport}`, 10, y);
-      y += 10;
+function setupTransport() {
+  const transportForm = document.getElementById('transportForm');
+  const transportTableBody = document.querySelector('#transportTable tbody');
+  const transportMessage = document.getElementById('transportMessage');
+
+  function getTransport() {
+    return JSON.parse(localStorage.getItem('transport')) || [];
+  }
+
+  function saveTransport(transport) {
+    localStorage.setItem('transport', JSON.stringify(transport));
+  }
+
+  function renderTransport() {
+    transportTableBody.innerHTML = '';
+    getTransport().forEach((vehicle, index) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${vehicle.id}</td>
+        <td>${vehicle.brand}</td>
+        <td>${vehicle.model}</td>
+        <td>${vehicle.year}</td>
+        <td>${vehicle.number}</td>
+        <td>
+          <button class="btn btn-sm btn-warning" onclick="editVehicle(${index})">Редагувати</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteVehicle(${index})">Видалити</button>
+        </td>
+      `;
+      transportTableBody.appendChild(row);
     });
-    doc.save('report.pdf');
+  }
+
+  window.editVehicle = function(index) {
+    const vehicles = getTransport();
+    const vehicle = vehicles[index];
+    document.getElementById('vehicleId').value = vehicle.id;
+    document.getElementById('vehicleBrand').value = vehicle.brand;
+    document.getElementById('vehicleModel').value = vehicle.model;
+    document.getElementById('vehicleYear').value = vehicle.year;
+    document.getElementById('vehicleNumber').value = vehicle.number;
+    transportForm.setAttribute('data-edit-index', index);
+  };
+
+  window.deleteVehicle = function(index) {
+    const vehicles = getTransport();
+    vehicles.splice(index, 1);
+    saveTransport(vehicles);
+    renderTransport();
+  };
+
+  transportForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const vehicles = getTransport();
+    const id = document.getElementById('vehicleId').value;
+    const brand = document.getElementById('vehicleBrand').value;
+    const model = document.getElementById('vehicleModel').value;
+    const year = document.getElementById('vehicleYear').value;
+    const number = document.getElementById('vehicleNumber').value;
+
+    const newVehicle = { id, brand, model, year, number };
+    const editIndex = transportForm.getAttribute('data-edit-index');
+
+    if (editIndex !== null) {
+      vehicles[editIndex] = newVehicle;
+      transportForm.removeAttribute('data-edit-index');
+    } else {
+      vehicles.push(newVehicle);
+    }
+
+    saveTransport(vehicles);
+    renderTransport();
+    transportForm.reset();
+    transportMessage.textContent = 'Транспорт збережено';
+    setTimeout(() => transportMessage.textContent = '', 2000);
   });
 
-  el.excelBtn?.addEventListener('click', () => {
-    const data = JSON.parse(el.reportContainer.dataset.json || '[]');
-    if (!data || data.length === 0) return alert('Немає даних для експорту.');
-    const ws = XLSX.utils.json_to_sheet(data);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Звіт');
-    XLSX.writeFile(wb, 'report.xlsx');
+  renderTransport();
+}
+
+function setupEmployees() {
+  const employeeForm = document.getElementById('employeeForm');
+  employeeForm.addEventListener('submit', e => {
+    e.preventDefault();
+    alert('Працівника додано (лише візуально, без збереження)');
+    employeeForm.reset();
   });
-});
+}
+
+function setupSearch() {
+  const search = document.createElement('input');
+  search.type = 'text';
+  search.placeholder = 'Пошук...';
+  search.className = 'form-control my-3';
+  document.querySelector('main').prepend(search);
+
+  search.addEventListener('input', () => {
+    const value = search.value.toLowerCase();
+    ['ordersTable', 'transportTable', 'employeeTable'].forEach(id => {
+      const table = document.getElementById(id);
+      if (table) {
+        const rows = table.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+          row.style.display = [...row.children].some(cell =>
+            cell.textContent.toLowerCase().includes(value)
+          ) ? '' : 'none';
+        });
+      }
+    });
+  });
+}
+
+function setupReports() {
+  // Проста заглушка
+  document.getElementById('generate-report-btn').addEventListener('click', () => {
+    document.getElementById('report-container').innerHTML = '<p>Звіт згенеровано (макет).</p>';
+    document.getElementById('download-csv-btn').style.display = 'inline-block';
+    document.getElementById('download-pdf-btn').style.display = 'inline-block';
+    document.getElementById('download-excel-btn').style.display = 'inline-block';
+  });
+}
