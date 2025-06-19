@@ -1,4 +1,4 @@
-
+window.addEventListener('DOMContentLoaded', () => {
 let editingOrderId = null;
 
 // Рендер замовлень
@@ -164,4 +164,4 @@ document.addEventListener('DOMContentLoaded', () => {
     URL.revokeObjectURL(url);
   });
 });
-
+});
