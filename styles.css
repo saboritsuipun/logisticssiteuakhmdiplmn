@@ -109,3 +109,14 @@ footer {
   margin-left: auto;
   margin-right: auto;
 }
+#searchInput {
+  background-color: #222;
+  color: #f0c419;
+  border: 1px solid #f0c419;
+}
+#searchBtn {
+  color: #111;
+  background-color: #f0c419;
+  border: none;
+  font-weight: bold;
+}
