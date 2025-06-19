@@ -108,8 +108,54 @@
     </section>
 
     <section id="transport" class="tab-section">
-      <h2>Транспорт</h2>
-      <p>Інформація про транспортні засоби та водіїв.</p>
+  <h2>Транспорт</h2>
+<p>Форма для перегляду та додавання транспортних засобів.</p>
+
+<!-- Таблиця -->
+<table class="table table-bordered" id="transportTable">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Марка</th>
+      <th>Модель</th>
+      <th>Рік</th>
+      <th>Номер</th>
+      <th>Дії</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Дані додаються через JS -->
+  </tbody>
+</table>
+
+<!-- Форма -->
+<h3>Додати/Редагувати транспорт</h3>
+<form id="transportForm" class="row g-3">
+  <div class="col-md-4">
+    <label class="form-label">ID ТЗ</label>
+    <input type="text" id="vehicleId" class="form-control" required>
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Марка</label>
+    <input type="text" id="vehicleBrand" class="form-control" required>
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Модель</label>
+    <input type="text" id="vehicleModel" class="form-control" required>
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Рік випуску</label>
+    <input type="number" id="vehicleYear" class="form-control" required>
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Номерний знак</label>
+    <input type="text" id="vehicleNumber" class="form-control" required>
+  </div>
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary">Зберегти</button>
+    <p id="transportMessage" class="mt-2 text-success"></p>
+  </div>
+</form>
     </section>
 
     <section id="employees" class="tab-section">
