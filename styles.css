@@ -1,53 +1,103 @@
 body {
   font-family: 'Segoe UI', sans-serif;
-  background-color: #f8f9fa;
-  color: #333;
+  background-color: #111; /* темний фон */
+  color: #f2c200;         /* яскраво-жовтий текст */
+  margin: 0;
+  padding: 0;
 }
 
-/* Сховані секції, окрім активної */
+h1, h2, h3, h4, h5, h6 {
+  color: #ffd700;
+}
+
+a, .nav-link {
+  color: #f2c200;
+  text-decoration: none;
+}
+a:hover, .nav-link:hover {
+  color: #fff;
+}
+
+header {
+  background-color: #000;
+  border-bottom: 3px solid #f2c200;
+}
+
+.nav .nav-link.active {
+  font-weight: bold;
+  border-bottom: 2px solid #f2c200;
+}
+
+main {
+  background-color: #1a1a1a;
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+footer {
+  background-color: #000;
+  color: #f2c200;
+  border-top: 3px solid #f2c200;
+  padding: 1rem;
+  text-align: center;
+}
+
+button, .btn {
+  background-color: #f2c200;
+  color: #111;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+button:hover, .btn:hover {
+  background-color: #ffd700;
+  color: #000;
+}
+
+.table th {
+  background-color: #f2c200;
+  color: #000;
+  text-align: center;
+}
+
+.table td {
+  background-color: #222;
+  color: #f2c200;
+}
+
+input, select, textarea {
+  background-color: #000;
+  color: #f2c200;
+  border: 1px solid #f2c200;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #888;
+}
+
+#home {
+  background: url('https://i.pinimg.com/736x/57/1d/08/571d08e1accced1aae46fc3267b22a54.jpg') no-repeat center center;
+  background-size: cover;
+  color: #f2c200;
+  padding: 4rem 2rem;
+  text-shadow: 1px 1px 3px #000;
+}
+
+#home h2, #home p, #home ul {
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
 .tab-section {
   display: none;
 }
+
 .tab-section.active {
   display: block;
 }
 
-h2 {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  color: #2c3e50;
-}
-
-table {
-  background-color: #fff;
-}
-
-th {
-  background-color: #343a40;
-  color: #fff;
-  text-align: center;
-}
-
-td, th {
-  vertical-align: middle;
-}
-
-.btn {
-  min-width: 100px;
-}
-
-form .form-label {
-  font-weight: bold;
-}
-
 #orderMessage, #transportMessage {
   font-weight: bold;
-  color: green;
-}
-
-footer {
-  margin-top: 2rem;
-  background-color: #f1f1f1;
-  padding: 10px 0;
-  font-size: 14px;
+  color: #00ff00;
 }
