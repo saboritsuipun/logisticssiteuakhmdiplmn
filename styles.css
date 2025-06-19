@@ -1,13 +1,4 @@
-header .container > button {
-  display: none;
-}
 
-/* А так робимо непомітною саму кнопку */
-header .container > button::before {
-  content: none;
-}
-
-/* Загальні стилі */
 body {
   background-color: #111; /* Темний фон */
   color: #f0c419; /* Яскравий жовтий текст */
