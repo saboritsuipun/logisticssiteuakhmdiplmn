@@ -1,16 +1,17 @@
-window.addEventListener('DOMContentLoaded', () => {
-  let editingOrderId = null;
-  let editingVehicleId = null;
-  let editingEmployeeId = null;
+document.querySelectorAll('[data-section]').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const section = link.getAttribute('data-section');
+    document.querySelectorAll('.tab-section').forEach(sec => sec.classList.remove('active'));
+    document.querySelector(`#${section}`)?.classList.add('active');
 
+    document.querySelectorAll('.nav-link').forEach(nav => nav.classList.remove('active', 'text-warning'));
+    link.classList.add('active', 'text-warning');
+  });
+});
+
+window.addEventListener('DOMContentLoaded', () => {
   const el = {
-    orderForm: document.getElementById('orderForm'),
-    orderMessage: document.getElementById('orderMessage'),
-    transportForm: document.getElementById('transportForm'),
-    transportMessage: document.getElementById('transportMessage'),
-    employeeForm: document.getElementById('employeeForm'),
-    employeeTableBody: document.querySelector('#employeeTable tbody'),
-    searchInput: document.getElementById('searchInput'),
     reportContainer: document.getElementById('report-container'),
     csvBtn: document.getElementById('download-csv-btn'),
     pdfBtn: document.getElementById('download-pdf-btn'),
@@ -22,11 +23,7 @@ window.addEventListener('DOMContentLoaded', () => {
     return JSON.parse(localStorage.getItem(key) || '[]');
   }
 
-  function setStorage(key, value) {
-    localStorage.setItem(key, JSON.stringify(value));
-  }
-
-  function generateReport() {
+  el.genReportBtn?.addEventListener('click', () => {
     const employees = getStorage('employees');
     const orders = getStorage('orders');
     const transport = getStorage('transport');
@@ -49,41 +46,39 @@ window.addEventListener('DOMContentLoaded', () => {
     el.reportContainer.dataset.json = JSON.stringify(report);
     el.reportContainer.dataset.csv = [['Працівник','Замовлень','Транспорт'], ...report.map(r => [r.name, r.orders, r.transport])].map(row => row.join(',')).join('\n');
 
-    [el.csvBtn, el.pdfBtn, el.excelBtn].forEach(btn => btn.classList.remove("d-none"));
-  }
+    [el.csvBtn, el.pdfBtn, el.excelBtn].forEach(btn => btn.classList.remove('d-none'));
+  });
 
-  el.genReportBtn?.addEventListener("click", generateReport);
-
-  el.csvBtn?.addEventListener("click", () => {
+  el.csvBtn?.addEventListener('click', () => {
     const csv = el.reportContainer.dataset.csv;
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const a = document.createElement("a");
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = "report.csv";
+    a.download = 'report.csv';
     a.click();
     URL.revokeObjectURL(a.href);
   });
 
-  el.pdfBtn?.addEventListener("click", () => {
+  el.pdfBtn?.addEventListener('click', () => {
     const { jsPDF } = window.jspdf;
-    const report = JSON.parse(el.reportContainer.dataset.json || "[]");
+    const report = JSON.parse(el.reportContainer.dataset.json || '[]');
     const doc = new jsPDF();
     doc.setFontSize(14);
-    doc.text("Звіт — Замовлення та транспорт по працівниках", 10, 10);
+    doc.text('Звіт — Замовлення та транспорт по працівниках', 10, 10);
     let y = 20;
     report.forEach(r => {
       doc.text(`${r.name}: Замовлень — ${r.orders}, Транспорт — ${r.transport}`, 10, y);
       y += 10;
     });
-    doc.save("report.pdf");
+    doc.save('report.pdf');
   });
 
-  el.excelBtn?.addEventListener("click", () => {
-    const data = JSON.parse(el.reportContainer.dataset.json || "[]");
-    if (!data || data.length === 0) return alert("Немає даних для експорту.");
+  el.excelBtn?.addEventListener('click', () => {
+    const data = JSON.parse(el.reportContainer.dataset.json || '[]');
+    if (!data || data.length === 0) return alert('Немає даних для експорту.');
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Звіт");
-    XLSX.writeFile(wb, "report.xlsx");
+    XLSX.utils.book_append_sheet(wb, ws, 'Звіт');
+    XLSX.writeFile(wb, 'report.xlsx');
   });
 });
